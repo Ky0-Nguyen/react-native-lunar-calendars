@@ -129,9 +129,8 @@ class CalendarHeader extends Component {
       <View>
         <View style={[this.style.header,this.props.headerColor]}>
           {leftArrow}
-          <View style={{ flexDirection: 'row' }}>
+          <View style={[{ flexDirection: 'row' }, this.props.headerColor]}>
             <Text allowFontScaling={false} style={this.style.monthText} accessibilityTraits='header'>
-              {/* {this.props.month.toString(this.props.monthFormat ? this.props.monthFormat : 'MMMM yyyy')} */}
               {month}
             </Text>
             {indicator}
