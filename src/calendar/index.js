@@ -12,7 +12,6 @@ import MultiPeriodDay from './day/multi-period';
 import SingleDay from './day/custom';
 import CalendarHeader from './header';
 import shouldComponentUpdate from './updater';
-import { colors } from '../../../../src/contants/theme';
 
 //Fallback when RN version is < 0.44
 const viewPropTypes = ViewPropTypes || View.propTypes;
@@ -267,7 +266,7 @@ class Calendar extends Component {
     
     return (
       <View style={[this.style.container, this.props.style]}>
-        <View style={{ backgroundColor: colors.primaryColor }}>
+       <View style={{ backgroundColor: 'transparent' }}>
           <CalendarHeader
             theme={this.props.theme}
             addMonth={this.addMonth}
