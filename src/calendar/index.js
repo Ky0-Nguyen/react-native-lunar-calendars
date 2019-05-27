@@ -263,16 +263,19 @@ class Calendar extends Component {
         indicator = true;
       }
     }
+
+    
     return (
       <View style={[this.style.container, this.props.style]}>
         <View style={{ backgroundColor: colors.primaryColor }}>
           <CalendarHeader
             theme={this.props.theme}
-            hideArrows={this.props.hideArrows}
-            month={this.state.currentMonth}
             addMonth={this.addMonth}
             showIndicator={indicator}
             firstDay={this.props.firstDay}
+            month={this.state.currentMonth}
+            hideArrows={this.props.hideArrows}
+            headerColor={this.props.headerColor}
             renderArrow={this.props.renderArrow}
             monthFormat={this.props.monthFormat}
             hideDayNames={this.props.hideDayNames}
