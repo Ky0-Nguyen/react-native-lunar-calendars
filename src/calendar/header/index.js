@@ -89,6 +89,7 @@ class CalendarHeader extends Component {
     let weekDaysNames = weekDayNames(this.props.firstDay);
     let date = this.props.month;
     let month = monthName(date.getMonth());
+    let year = date.getFullYear();
     if (!this.props.hideArrows) {
       leftArrow = (
         <TouchableOpacity
@@ -131,7 +132,7 @@ class CalendarHeader extends Component {
           {leftArrow}
           <View style={[{ flexDirection: 'row' }, this.props.headerColor]}>
             <Text allowFontScaling={false} style={this.style.monthText} accessibilityTraits='header'>
-              {month}
+              {month} {year}
             </Text>
             {indicator}
           </View>
