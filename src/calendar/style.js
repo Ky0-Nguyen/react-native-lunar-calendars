@@ -1,6 +1,5 @@
 import {StyleSheet} from 'react-native';
 import * as defaultStyle from '../style';
-import { colors } from '../../../../src/contants/theme';
 
 const STYLESHEET_ID = 'stylesheet.calendar.main';
 
@@ -12,7 +11,7 @@ export default function getStyle(theme={}) {
       // paddingLeft: 5,
       // paddingRight: 5,
       // backgroundColor: appStyle.calendarBackground
-      backgroundColor: colors.primaryColor
+      backgroundColor: '#fff'
     },
     monthView: {
       borderBottomLeftRadius: 8,
