@@ -1,0 +1,10 @@
+import XDate from 'xdate';
+export declare function sameMonth(a: XDate, b: XDate): boolean;
+export declare function sameDate(a: XDate, b: XDate): boolean;
+export declare function monthName(month: number): string;
+export declare function isGTE(a: XDate, b: XDate): boolean;
+export declare function isLTE(a: XDate, b: XDate): boolean;
+export declare function fromTo(a: XDate, b: XDate): XDate[];
+export declare function month(xd: XDate): XDate[];
+export declare function weekDayNames(firstDayOfWeek?: number): string[];
+export declare function page(xd: XDate, firstDayOfWeek: number): XDate[];

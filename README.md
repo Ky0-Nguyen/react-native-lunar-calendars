@@ -1,7 +1,6 @@
 # React Native Lunar Calendars ✨ 🗓️ 📆
 
-This module includes various customizable react native lunar calendar components.
-This module custom from react-native-calendars
+This module is a fork of [react-native-calendars](https://github.com/wix/react-native-calendars) that includes various customizable react native lunar calendar components.
 
 The package is both **Android** and **iOS** compatible.
 
