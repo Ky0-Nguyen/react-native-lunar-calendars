@@ -8,13 +8,11 @@ declare class Day extends React.Component<any, any, any> {
         date: PropTypes.Requireable<object>;
     };
     constructor(props: any);
-    style: {
-        [x: string]: import("react-native").RegisteredStyle<any>;
-    };
+    style: any;
     onDayPress(): void;
     onDayLongPress(): void;
     shouldComponentUpdate(nextProps: any): boolean;
     render(): React.JSX.Element;
 }
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';

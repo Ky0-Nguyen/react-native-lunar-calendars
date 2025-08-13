@@ -1,8 +1,45 @@
 # React Native Lunar Calendars ✨ 🗓️ 📆
 
-This module is a fork of [react-native-calendars](https://github.com/wix/react-native-calendars) that includes various customizable react native lunar calendar components.
+This module is a fork of [react-native-calendars](https://github.com/wix/react-native-calendars) that includes various customizable react native lunar calendar components with **Vietnamese Lunar Calendar (Âm Lịch)** support.
 
 The package is both **Android** and **iOS** compatible.
+
+## 🔄 About This Fork
+
+This is a maintained fork of the original `react-native-calendars` library by Wix.com. We've added Vietnamese lunar calendar functionality while keeping all the original features intact.
+
+### Why This Fork Exists
+
+- **Lunar Calendar Support**: Added Vietnamese lunar date calculations and display
+- **Active Maintenance**: Regular updates and bug fixes
+- **TypeScript Support**: Full TypeScript definitions
+- **Community Focus**: Vietnamese developer community support
+
+### Sync Strategy with Upstream
+
+We maintain compatibility with the original library while adding lunar calendar features. When the upstream repository releases new versions:
+
+1. **Feature Updates**: We merge new features from upstream
+2. **Bug Fixes**: We incorporate upstream bug fixes
+3. **Breaking Changes**: We carefully evaluate and adapt breaking changes
+4. **Lunar Features**: We preserve and enhance lunar calendar functionality
+
+### Version Compatibility
+
+- **Base Version**: This fork is based on `react-native-calendars` v1.x
+- **React Native**: Compatible with React Native 0.47+ to 0.81+ (tested with latest)
+- **React**: Compatible with React 16+ to 18+ (tested with React 18.2.0)
+- **TypeScript**: Compatible with TypeScript 4.9+ to 5.3+ (tested with latest)
+- **Lunar Calendar**: Supports years 1800-2199
+
+## 🌙 Features
+
+- **Lunar Calendar Support**: Display Vietnamese lunar dates alongside solar dates
+- **Multiple Calendar Types**: Basic, Period, Multi-dot, Multi-period, and Custom marking styles
+- **Lunar Date Calculation**: Accurate lunar date conversion for years 1800-2199
+- **Customizable Themes**: Full theme customization support
+- **TypeScript Support**: Written in TypeScript with full type definitions
+- **Performance Optimized**: Efficient rendering and updates
 
 ## Installation
 
@@ -12,10 +49,63 @@ $ npm install --save react-native-lunar-calendars
 
 The solution is implemented in JavaScript so no native module linking is required.
 
+## 🔄 Migration from react-native-calendars
+
+If you're migrating from the original `react-native-calendars` library:
+
+### Simple Migration
+```javascript
+// Before
+import { Calendar } from 'react-native-calendars';
+
+// After
+import { Calendar } from 'react-native-lunar-calendars';
+```
+
+### Enhanced Migration with Lunar Features
+```javascript
+import { Calendar } from 'react-native-lunar-calendars';
+
+// Your existing calendar code will work exactly the same
+// Plus you get lunar calendar features automatically
+<Calendar
+  markingType={'multi-period'}
+  // Lunar dates will be displayed automatically
+/>
+```
+
+### Compatibility Notes
+
+- ✅ **100% API Compatible**: All original API methods work identically
+- ✅ **Same Props**: All original props are supported
+- ✅ **Same Events**: All original event handlers work
+- ✅ **Same Styling**: All original theme properties work
+- ✅ **Plus Lunar Features**: Additional lunar calendar functionality
+
 ## Usage
 
 
 `import {` [Calendar](#calendar), [CalendarList](#calendarlist), [Agenda](#agenda) `} from 'react-native-lunar-calendars';`
+
+## 🌙 Lunar Calendar Features
+
+This library includes Vietnamese lunar calendar functionality. Lunar dates are automatically displayed below the solar dates in the calendar. The lunar calendar supports:
+
+- **Lunar Date Display**: Shows lunar day and month below solar dates
+- **Special Lunar Days**: First day of lunar month is highlighted in red
+- **Accurate Calculations**: Based on Vietnamese lunar calendar algorithms
+- **Year Range**: Supports years 1800-2199
+
+### Lunar Calendar Example
+
+```javascript
+<Calendar
+  markingType={'multi-period'}
+  // Lunar dates will be automatically displayed
+  // First day of lunar month will be shown in red
+  // Other lunar dates will be shown in gray
+/>
+```
 
 All parameters for components are optional. By default the month of current local date will be displayed.
 
@@ -426,10 +516,46 @@ An advanced agenda component that can display interactive listings for calendar 
 
 ## Authors
 
-- AngelCat
+- **Tuan Nguyen** - *Initial work* - [Ky0-Nguyen](https://github.com/Ky0-Nguyen)
+
+This project is a fork of [react-native-calendars](https://github.com/wix/react-native-calendars) with lunar calendar functionality added.
 
 See also the list of [contributors] who participated in this project.
+
+## 🔧 Maintenance & Updates
+
+### Upstream Sync Process
+
+When the original `react-native-calendars` library releases updates, we follow this process:
+
+1. **Monitor Upstream**: We track releases from the original repository
+2. **Evaluate Changes**: We assess new features and breaking changes
+3. **Merge Updates**: We carefully merge upstream changes while preserving lunar features
+4. **Test Compatibility**: We ensure lunar calendar functionality remains intact
+5. **Release Updates**: We publish new versions with both upstream and lunar improvements
+
+### Current Status
+
+- **Upstream Version**: Based on `react-native-calendars` v1.x
+- **Last Sync**: December 2024
+- **Lunar Features**: Fully functional and tested
+- **Compatibility**: 100% compatible with original API
+
+### Reporting Issues
+
+If you encounter issues:
+1. Check if it's a lunar calendar specific issue
+2. Check if it exists in the original library
+3. Report lunar-specific issues here
+4. Report general calendar issues to the upstream repository
 
 ## Contributing
 
 Pull requests are welcome. `npm run test` and `npm run lint` before push.
+
+### Development Guidelines
+
+- **Lunar Features**: Focus on lunar calendar enhancements
+- **Upstream Compatibility**: Maintain compatibility with original library
+- **Testing**: Test both solar and lunar calendar functionality
+- **Documentation**: Update docs for any new lunar features

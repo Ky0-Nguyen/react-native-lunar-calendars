@@ -13,9 +13,7 @@ declare class Day extends React.Component<any, any, any> {
     year: string;
     leap: string;
     jd: string;
-    style: {
-        [x: string]: import("react-native").RegisteredStyle<any>;
-    };
+    style: any;
     onDayPress(): void;
     getLunarDate(dd: any, mm: any, yyyy: any): any;
     getYearInfo(yyyy: any): any[];
@@ -27,5 +25,5 @@ declare class Day extends React.Component<any, any, any> {
     renderPeriods(marking: any): any;
     render(): React.JSX.Element;
 }
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';

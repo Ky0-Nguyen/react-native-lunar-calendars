@@ -1,3 +1,1 @@
-export default function getStyle(theme?: {}): {
-    [x: string]: import("react-native").RegisteredStyle<any>;
-};
+export default function getStyle(theme?: {}): any;

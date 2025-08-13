@@ -3,7 +3,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.parseDate = exports.xdateToData = void 0;
+exports.xdateToData = xdateToData;
+exports.parseDate = parseDate;
 var xdate_1 = __importDefault(require("xdate"));
 function padNumber(n) {
     if (n < 10) {
@@ -21,7 +22,6 @@ function xdateToData(xdate) {
         dateString: dateString
     };
 }
-exports.xdateToData = xdateToData;
 function parseDate(d) {
     if (!d) {
         return undefined;
@@ -46,4 +46,3 @@ function parseDate(d) {
     }
     return undefined;
 }
-exports.parseDate = parseDate;

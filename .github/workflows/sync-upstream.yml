@@ -1,0 +1,85 @@
+name: Check Upstream Updates
+
+on:
+  schedule:
+    # Check every Monday at 9 AM UTC
+    - cron: '0 9 * * 1'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  check-upstream:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      
+    - name: Check upstream for updates
+      id: check-upstream
+      run: |
+        # Get current upstream version
+        CURRENT_UPSTREAM=$(curl -s https://api.github.com/repos/wix/react-native-calendars/releases/latest | jq -r '.tag_name')
+        
+        # Get our base upstream version from package.json
+        OUR_UPSTREAM=$(node -p "require('./package.json').upstream.version")
+        
+        echo "Current upstream version: $CURRENT_UPSTREAM"
+        echo "Our base upstream version: $OUR_UPSTREAM"
+        
+        # Check if there are newer releases
+        if [[ "$CURRENT_UPSTREAM" != *"$OUR_UPSTREAM"* ]]; then
+          echo "::set-output name=has-updates::true"
+          echo "::set-output name=latest-version::$CURRENT_UPSTREAM"
+        else
+          echo "::set-output name=has-updates::false"
+        fi
+        
+    - name: Create issue for upstream updates
+      if: steps.check-upstream.outputs.has-updates == 'true'
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const { data: issues } = await github.rest.issues.listForRepo({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            state: 'open',
+            labels: ['upstream-sync']
+          });
+          
+          // Check if issue already exists
+          const existingIssue = issues.find(issue => 
+            issue.title.includes('Upstream Update Available')
+          );
+          
+          if (!existingIssue) {
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `Upstream Update Available: ${context.payload.latest_version || 'New version'}`,
+              body: `## Upstream Update Available
+              
+              The upstream repository [react-native-calendars](https://github.com/wix/react-native-calendars) has released a new version: **${context.payload.latest_version || 'Unknown'}**
+              
+              ### Action Required
+              
+              Please review the upstream changes and consider syncing:
+              
+              1. Check the [upstream changelog](https://github.com/wix/react-native-calendars/releases)
+              2. Review breaking changes and new features
+              3. Follow the [sync process](UPSTREAM_SYNC.md)
+              4. Test lunar calendar functionality after sync
+              
+              ### Current Status
+              
+              - **Our Version**: ${context.payload.our_version || 'Unknown'}
+              - **Upstream Version**: ${context.payload.latest_version || 'Unknown'}
+              - **Last Check**: ${new Date().toISOString()}
+              
+              ---
+              
+              *This issue was automatically created by the upstream sync workflow.*`,
+              labels: ['upstream-sync', 'maintenance']
+            });
+          }
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -11,9 +11,7 @@ declare class Day extends React.Component<any, any, any> {
     };
     constructor(props: any);
     theme: any;
-    style: {
-        [x: string]: import("react-native").RegisteredStyle<any>;
-    };
+    style: any;
     markingStyle: any;
     onDayPress(): void;
     onDayLongPress(): void;
@@ -21,5 +19,5 @@ declare class Day extends React.Component<any, any, any> {
     getDrawingStyle(marking: any): any;
     render(): React.JSX.Element;
 }
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';

@@ -4,9 +4,7 @@ declare class CalendarList extends React.Component<any, any, any> {
     constructor(props: any);
     pastScrollRange: any;
     futureScrollRange: any;
-    style: {
-        [x: string]: import("react-native").RegisteredStyle<any>;
-    };
+    style: any;
     calendarWidth: any;
     calendarHeight: any;
     state: {
@@ -37,11 +35,12 @@ declare class CalendarList extends React.Component<any, any, any> {
     }): React.JSX.Element;
     getMonthIndex(month: any): any;
     render(): React.JSX.Element;
-    listView: React.Component<import("react-native").FlatListProperties<any>, any, any> | null | undefined;
+    listView: FlatList<any> | null | undefined;
 }
 declare namespace CalendarList {
     namespace defaultProps {
-        const calendarHeight: number;
+        let calendarHeight: number;
     }
 }
-import React from "react";
+import React from 'react';
+import { FlatList } from 'react-native';

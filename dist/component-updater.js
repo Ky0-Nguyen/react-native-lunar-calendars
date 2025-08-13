@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.shouldUpdate = void 0;
+exports.shouldUpdate = shouldUpdate;
 var lodash_get_1 = __importDefault(require("lodash.get"));
 var lodash_isequal_1 = __importDefault(require("lodash.isequal"));
 function shouldUpdate(a, b, paths) {
@@ -15,4 +15,3 @@ function shouldUpdate(a, b, paths) {
     }
     return false;
 }
-exports.shouldUpdate = shouldUpdate;

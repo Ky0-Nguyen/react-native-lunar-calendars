@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = shouldComponentUpdate;
 var interface_1 = require("../interface");
 function shouldComponentUpdate(nextProps, nextState, currentProps, currentState) {
     var _a, _b;
@@ -52,4 +53,3 @@ function shouldComponentUpdate(nextProps, nextState, currentProps, currentState)
     }
     return shouldUpdate.update;
 }
-exports.default = shouldComponentUpdate;

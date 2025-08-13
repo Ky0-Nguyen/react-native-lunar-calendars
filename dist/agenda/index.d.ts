@@ -24,9 +24,7 @@ export default class AgendaView extends React.Component<any, any, any> {
         monthFormat: PropTypes.Requireable<string>;
     };
     constructor(props: any);
-    styles: {
-        [x: string]: import("react-native").RegisteredStyle<any>;
-    };
+    styles: any;
     viewHeight: number;
     viewWidth: number;
     scrollTimeout: NodeJS.Timeout | undefined;
@@ -65,13 +63,14 @@ export default class AgendaView extends React.Component<any, any, any> {
     list: ReservationsList | null | undefined;
     onDayChange(day: any): void;
     render(): React.JSX.Element;
-    knob: React.ClassicComponent<import("react-native").ViewProperties, any> | null | undefined;
+    knob: View | null | undefined;
     calendar: CalendarList | null | undefined;
-    scrollPad: any;
+    scrollPad: import("react-native").ScrollView | Animated.LegacyRef<import("react-native").ScrollView> | null | undefined;
 }
-import React from "react";
-import { Animated } from "react-native";
-import { VelocityTracker } from "../input";
-import ReservationsList from "./reservation-list";
-import CalendarList from "../calendar-list";
-import PropTypes from "prop-types";
+import React from 'react';
+import { Animated } from 'react-native';
+import { VelocityTracker } from '../input';
+import ReservationsList from './reservation-list';
+import { View } from 'react-native';
+import CalendarList from '../calendar-list';
+import PropTypes from 'prop-types';

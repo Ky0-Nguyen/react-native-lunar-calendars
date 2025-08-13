@@ -9,13 +9,28 @@ module.exports = {
         "describe": true,
     },
     "extends": "eslint:recommended",
-    "parser": "babel-eslint",
+    "parser": "@babel/eslint-parser",
     "parserOptions": {
         "ecmaFeatures": {
             "experimentalObjectRestSpread": true,
             "jsx": true
         },
-        "sourceType": "module"
+        "sourceType": "module",
+        "requireConfigFile": false,
+        "babelOptions": {
+            "presets": ["@babel/preset-react", "@babel/preset-typescript"]
+        }
+    },
+    "parserOptions": {
+        "ecmaFeatures": {
+            "experimentalObjectRestSpread": true,
+            "jsx": true
+        },
+        "sourceType": "module",
+        "requireConfigFile": false,
+        "babelOptions": {
+            "presets": ["@babel/preset-react", "@babel/preset-typescript"]
+        }
     },
     "plugins": [
         "react"

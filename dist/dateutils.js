@@ -12,35 +12,38 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.page = exports.weekDayNames = exports.month = exports.fromTo = exports.isLTE = exports.isGTE = exports.monthName = exports.sameDate = exports.sameMonth = void 0;
+exports.sameMonth = sameMonth;
+exports.sameDate = sameDate;
+exports.monthName = monthName;
+exports.isGTE = isGTE;
+exports.isLTE = isLTE;
+exports.fromTo = fromTo;
+exports.month = month;
+exports.weekDayNames = weekDayNames;
+exports.page = page;
 var xdate_1 = __importDefault(require("xdate"));
 function sameMonth(a, b) {
     return a instanceof xdate_1.default && b instanceof xdate_1.default &&
         a.getFullYear() === b.getFullYear() &&
         a.getMonth() === b.getMonth();
 }
-exports.sameMonth = sameMonth;
 function sameDate(a, b) {
     return a instanceof xdate_1.default && b instanceof xdate_1.default &&
         a.getFullYear() === b.getFullYear() &&
         a.getMonth() === b.getMonth() &&
         a.getDate() === b.getDate();
 }
-exports.sameDate = sameDate;
 function monthName(month) {
     var _a;
     var locales = xdate_1.default.locales[xdate_1.default.defaultLocale];
     return ((_a = locales === null || locales === void 0 ? void 0 : locales.monthNames) === null || _a === void 0 ? void 0 : _a[month]) || '';
 }
-exports.monthName = monthName;
 function isGTE(a, b) {
     return b.diffDays(a) > -1;
 }
-exports.isGTE = isGTE;
 function isLTE(a, b) {
     return a.diffDays(b) > -1;
 }
-exports.isLTE = isLTE;
 function fromTo(a, b) {
     var days = [];
     var from = +a, to = +b;
@@ -49,7 +52,6 @@ function fromTo(a, b) {
     }
     return days;
 }
-exports.fromTo = fromTo;
 function month(xd) {
     var year = xd.getFullYear(), month = xd.getMonth();
     var days = new Date(year, month + 1, 0).getDate();
@@ -57,7 +59,6 @@ function month(xd) {
     var lastDay = new xdate_1.default(year, month, days, 0, 0, 0);
     return fromTo(firstDay, lastDay);
 }
-exports.month = month;
 function weekDayNames(firstDayOfWeek) {
     if (firstDayOfWeek === void 0) { firstDayOfWeek = 0; }
     var locales = xdate_1.default.locales[xdate_1.default.defaultLocale];
@@ -71,7 +72,6 @@ function weekDayNames(firstDayOfWeek) {
     }
     return weekDaysNames;
 }
-exports.weekDayNames = weekDayNames;
 function page(xd, firstDayOfWeek) {
     var days = month(xd);
     var before = [], after = [];
@@ -95,4 +95,3 @@ function page(xd, firstDayOfWeek) {
     }
     return before.concat(days.slice(1, days.length - 1), after);
 }
-exports.page = page;

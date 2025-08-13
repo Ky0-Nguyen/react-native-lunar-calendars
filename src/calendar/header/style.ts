@@ -1,4 +1,4 @@
-import {StyleSheet, Platform, ViewStyle, TextStyle, RegisteredStyle} from 'react-native';
+import {StyleSheet, Platform, ViewStyle, TextStyle} from 'react-native';
 import * as defaultStyle from '../../style';
 
 const STYLESHEET_ID = 'stylesheet.calendar.header';
@@ -8,13 +8,13 @@ interface Theme {
 }
 
 export interface HeaderStyle {
-  header: RegisteredStyle<ViewStyle>;
-  monthText: RegisteredStyle<TextStyle>;
-  arrow: RegisteredStyle<ViewStyle>;
-  arrowImage: RegisteredStyle<ViewStyle>;
-  week: RegisteredStyle<ViewStyle>;
-  dayHeader: RegisteredStyle<TextStyle>;
-  [key: string]: RegisteredStyle<ViewStyle | TextStyle>;
+  header: ViewStyle;
+  monthText: TextStyle;
+  arrow: ViewStyle;
+  arrowImage: ViewStyle;
+  week: ViewStyle;
+  dayHeader: TextStyle;
+  [key: string]: ViewStyle | TextStyle;
 }
 
 export default function styleConstructor(theme: Theme = {}): HeaderStyle {

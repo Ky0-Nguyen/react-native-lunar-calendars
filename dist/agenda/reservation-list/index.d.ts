@@ -12,9 +12,7 @@ declare class ReactComp extends React.Component<any, any, any> {
         topDay: PropTypes.Requireable<XDate>;
     };
     constructor(props: any);
-    styles: {
-        [x: string]: import("react-native").RegisteredStyle<any>;
-    };
+    styles: any;
     state: {
         reservations: never[];
     };
@@ -38,8 +36,9 @@ declare class ReactComp extends React.Component<any, any, any> {
         scrollPosition: number;
     };
     render(): any;
-    list: React.Component<import("react-native").FlatListProperties<any>, any, any> | null | undefined;
+    list: FlatList<never> | null | undefined;
 }
-import React from "react";
-import PropTypes from "prop-types";
-import XDate from "xdate";
+import React from 'react';
+import { FlatList } from 'react-native';
+import PropTypes from 'prop-types';
+import XDate from 'xdate';
