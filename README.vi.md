@@ -284,11 +284,11 @@ Component agenda nâng cao có thể hiển thị danh sách tương tác cho c�
   // Ẩn nút knob. Mặc định = false
   hideKnob={true}
   // Theo mặc định, ngày agenda được đánh dấu nếu chúng có ít nhất một item, nhưng bạn có thể override nếu cần
-  markedDates={{
+  markedDates={% raw %}{{
     '2012-05-16': {selected: true, marked: true},
     '2012-05-17': {marked: true},
     '2012-05-18': {disabled: true}
-  }}
+  }}{% endraw %}
   // agenda theme
   theme={{
     ...calendarTheme,
