@@ -1,85 +1,79 @@
 import {parseDate} from '../interface';
-import XDate from 'xdate';
 
-interface UpdateResult {
-  update: boolean;
-  field?: string;
-}
+type UpdaterProps = Record<string, unknown>;
 
-interface CalendarProps {
-  selected?: string[];
-  markedDates?: any;
-  hideExtraDays?: boolean;
-  minDate?: string;
-  maxDate?: string;
-  current?: string;
-  [key: string]: any;
-}
-
-interface CalendarState {
+interface UpdaterState {
   currentMonth: string;
 }
 
+/** Props whose identity change alone is enough to warrant a re-render. */
+const IDENTITY_PROPS = [
+  'markedDates',
+  'markingType',
+  'theme',
+  'style',
+  'hideExtraDays',
+  'hideArrows',
+  'hideDayNames',
+  'showWeekNumbers',
+  'displayLoadingIndicator',
+  'disabledByDefault',
+  'disablePastDates',
+  'firstDay',
+  'monthFormat',
+  'dayComponent',
+  'renderArrow'
+] as const;
+
+/** Props holding a date that has to be compared by value, not by identity. */
+const DATE_PROPS = ['minDate', 'maxDate', 'current'] as const;
+
+/**
+ * Decide whether `<Calendar />` has to re-render.
+ *
+ * A month is 30-42 day components, so skipping a render here skips a lot of work.
+ * Callers that mutate `markedDates` in place instead of replacing it will not
+ * trigger an update - that is intentional and matches the upstream library.
+ */
 export default function shouldComponentUpdate(
-  nextProps: CalendarProps,
-  nextState: CalendarState,
-  currentProps: CalendarProps,
-  currentState: CalendarState
+  rawNextProps: object,
+  nextState: UpdaterState,
+  rawCurrentProps: object,
+  currentState: UpdaterState
 ): boolean {
-  let shouldUpdate: UpdateResult = {update: false};
+  const nextProps = rawNextProps as UpdaterProps;
+  const currentProps = rawCurrentProps as UpdaterProps;
 
-  // Check selected dates
-  const nextSelected = nextProps.selected || [];
-  const currentSelected = currentProps.selected || [];
-  
-  for (let i = 0; i < nextSelected.length; i++) {
-    const next = nextSelected[i];
-    const current = currentSelected[i];
-    
-    if (!current || !next || parseDate(current)?.getTime() !== parseDate(next)?.getTime()) {
-      shouldUpdate = {
-        update: true,
-        field: 'selected'
-      };
-      break;
-    }
-  }
-
-  // Check markedDates and hideExtraDays
-  ['markedDates', 'hideExtraDays'].forEach(prop => {
-    if (!shouldUpdate.update && nextProps[prop] !== currentProps[prop]) {
-      shouldUpdate = {
-        update: true,
-        field: prop
-      };
-    }
-  });
-
-  // Check date-related props
-  ['minDate', 'maxDate', 'current'].forEach(prop => {
-    if (shouldUpdate.update) return;
-
-    const prevDate = currentProps[prop] ? parseDate(currentProps[prop]) : null;
-    const nextDate = nextProps[prop] ? parseDate(nextProps[prop]) : null;
-
-    if (prevDate !== nextDate) {
-      if (prevDate && nextDate && prevDate.getTime() === nextDate.getTime()) {
-        return;
-      }
-      shouldUpdate = {
-        update: true,
-        field: prop
-      };
-    }
-  });
-
-  // Check current month
   if (nextState.currentMonth !== currentState.currentMonth) {
-    shouldUpdate = {
-      update: true,
-      field: 'current'
-    };
+    return true;
   }
 
-  return shouldUpdate.update;
+  const nextSelected = (nextProps.selected as unknown[]) ?? [];
+  const currentSelected = (currentProps.selected as unknown[]) ?? [];
+  if (nextSelected.length !== currentSelected.length) {
+    return true;
+  }
+  for (let i = 0; i < nextSelected.length; i++) {
+    const next = parseDate(nextSelected[i] as never);
+    const current = parseDate(currentSelected[i] as never);
+    if (next?.getTime() !== current?.getTime()) {
+      return true;
+    }
+  }
+
+  for (const prop of IDENTITY_PROPS) {
+    if (nextProps[prop] !== currentProps[prop]) {
+      return true;
+    }
+  }
+
+  for (const prop of DATE_PROPS) {
+    const next = parseDate(nextProps[prop] as never);
+    const current = parseDate(currentProps[prop] as never);
+    if (next?.getTime() !== current?.getTime()) {
+      return true;
+    }
+  }
+
+  return false;
 }

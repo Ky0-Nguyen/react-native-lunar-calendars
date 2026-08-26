@@ -1,7 +1,6 @@
 # OSX
 #
 .DS_Store
-assets
 *app.dSYM.zip
 # Xcode
 #
@@ -61,3 +60,18 @@ ios/Pods/
 package-lock.json
 yarn-error.log
 yarn.lock
+
+# Build output
+dist/
+coverage/
+
+# Expo
+.expo/
+example/.expo/
+example/node_modules/
+example/ios/
+example/android/
+
+# Demo recordings (intermediate)
+docs/media/demo-raw.mov
+.maestro/**/.maestro

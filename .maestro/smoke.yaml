@@ -1,0 +1,33 @@
+# Fast pass/fail check that every screen of the example app renders.
+#
+# The example runs inside Expo Go, so this attaches to an already-running app:
+#   npm --prefix example run ios
+#   maestro --device <simulator-udid> test .maestro/smoke.yaml
+appId: host.exp.Exponent
+---
+- assertVisible: 'react-native-lunar-calendars'
+
+- tapOn: 'Lunar'
+- assertVisible: 'Tháng 2 2026'
+- tapOn: '2026-02-17'
+- assertVisible: '1/1 · 1/2026'
+
+- tapOn: 'Marked'
+- assertVisible: 'Tháng 2 2026'
+
+- tapOn: 'Period'
+- assertVisible: 'Tháng 2 2026'
+
+- tapOn: 'Multi-dot'
+- assertVisible: 'Tháng 2 2026'
+
+# The tab strip scrolls horizontally; the last two tabs start off-screen.
+- swipe:
+    start: 85%, 19%
+    end: 15%, 19%
+
+- tapOn: 'Calendar list'
+- assertVisible: 'Tháng 2 2026'
+
+- tapOn: 'Agenda'
+- assertVisible: 'Tết — first day of the lunar year'

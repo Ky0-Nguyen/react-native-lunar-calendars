@@ -1,145 +1,131 @@
 import React, {Component} from 'react';
-import {ActivityIndicator, View, Text, TouchableOpacity, ViewStyle} from 'react-native';
-import {createIconSetFromFontello} from 'react-native-vector-icons';
+import {ActivityIndicator, Text, TouchableOpacity, View, type StyleProp, type ViewStyle} from 'react-native';
 import XDate from 'xdate';
-import styleConstructor, {HeaderStyle} from './style';
-import {weekDayNames, monthName} from '../../dateutils';
+import styleConstructor from './style';
+import {monthName, weekDayNames} from '../../dateutils';
+import type {CalendarTheme} from '../../theme';
 
-interface CalendarHeaderProps {
-  theme?: {[key: string]: any};
-  hideArrows?: boolean;
+export interface CalendarHeaderProps {
+  theme?: CalendarTheme;
   month: XDate;
-  addMonth: (num: number) => void;
+  addMonth: (count: number) => void;
+  monthFormat?: string;
+  hideArrows?: boolean;
   showIndicator?: boolean;
   firstDay?: number;
   renderArrow?: (direction: 'left' | 'right') => React.ReactNode;
   hideDayNames?: boolean;
   weekNumbers?: boolean;
-  onPressArrowLeft?: (callback: () => void) => void;
-  onPressArrowRight?: (callback: () => void) => void;
-  headerColor?: ViewStyle;
+  disableArrowLeft?: boolean;
+  disableArrowRight?: boolean;
+  onPressArrowLeft?: (subtractMonth: () => void) => void;
+  onPressArrowRight?: (addMonth: () => void) => void;
+  headerStyle?: StyleProp<ViewStyle>;
 }
 
-interface CalendarHeaderState {}
-
-class CalendarHeader extends Component<CalendarHeaderProps, CalendarHeaderState> {
-  private style: HeaderStyle;
-  private currentDate: Date;
+class CalendarHeader extends Component<CalendarHeaderProps> {
+  private style: ReturnType<typeof styleConstructor>;
 
   constructor(props: CalendarHeaderProps) {
     super(props);
     this.style = styleConstructor(props.theme);
-    this.addMonth = this.addMonth.bind(this);
-    this.substractMonth = this.substractMonth.bind(this);
-    this.onPressLeft = this.onPressLeft.bind(this);
-    this.onPressRight = this.onPressRight.bind(this);
-    this.currentDate = new Date();
   }
 
-  shouldComponentUpdate(nextProps: CalendarHeaderProps): boolean {
-    if (
-      nextProps.month.toString('yyyy MM') !==
-      this.props.month.toString('yyyy MM')
-    ) {
-      return true;
-    }
-    if (nextProps.showIndicator !== this.props.showIndicator) {
-      return true;
-    }
-    if (nextProps.hideDayNames !== this.props.hideDayNames) {
-      return true;
-    }
-    return false;
+  override shouldComponentUpdate(nextProps: CalendarHeaderProps): boolean {
+    return (
+      nextProps.month.toString('yyyy MM') !== this.props.month.toString('yyyy MM') ||
+      nextProps.showIndicator !== this.props.showIndicator ||
+      nextProps.hideDayNames !== this.props.hideDayNames ||
+      nextProps.hideArrows !== this.props.hideArrows ||
+      nextProps.disableArrowLeft !== this.props.disableArrowLeft ||
+      nextProps.disableArrowRight !== this.props.disableArrowRight ||
+      nextProps.theme !== this.props.theme
+    );
   }
 
-  onPressLeft(): void {
+  subtractMonth = (): void => {
+    this.props.addMonth(-1);
+  };
+
+  addMonth = (): void => {
+    this.props.addMonth(1);
+  };
+
+  onPressLeft = (): void => {
     const {onPressArrowLeft} = this.props;
     if (typeof onPressArrowLeft === 'function') {
-      return onPressArrowLeft(this.substractMonth);
+      onPressArrowLeft(this.subtractMonth);
+      return;
     }
-    return this.substractMonth();
-  }
+    this.subtractMonth();
+  };
 
-  onPressRight(): void {
+  onPressRight = (): void => {
     const {onPressArrowRight} = this.props;
     if (typeof onPressArrowRight === 'function') {
-      return onPressArrowRight(this.addMonth);
+      onPressArrowRight(this.addMonth);
+      return;
     }
-    return this.addMonth();
+    this.addMonth();
+  };
+
+  private renderArrow(direction: 'left' | 'right'): React.ReactNode {
+    const disabled = direction === 'left' ? this.props.disableArrowLeft : this.props.disableArrowRight;
+    const onPress = direction === 'left' ? this.onPressLeft : this.onPressRight;
+
+    return (
+      <TouchableOpacity
+        onPress={onPress}
+        disabled={disabled}
+        style={this.style.arrow}
+        hitSlop={{left: 20, right: 20, top: 20, bottom: 20}}
+        accessibilityRole="button"
+        accessibilityLabel={direction === 'left' ? 'Previous month' : 'Next month'}
+      >
+        {this.props.renderArrow ? (
+          this.props.renderArrow(direction)
+        ) : (
+          <Text
+            allowFontScaling={false}
+            style={disabled ? [this.style.arrowText, this.style.disabledArrowText] : this.style.arrowText}
+          >
+            {direction === 'left' ? '‹' : '›'}
+          </Text>
+        )}
+      </TouchableOpacity>
+    );
   }
 
-  substractMonth(): void {
-    this.props.addMonth(-1);
+  private renderTitle(): string {
+    const {month, monthFormat} = this.props;
+    if (monthFormat) {
+      return month.toString(monthFormat);
+    }
+    return `${monthName(month.getMonth())} ${month.getFullYear()}`;
   }
 
-  canViewPreviouMonth(): boolean {
-    const month = this.props.month.getMonth();
-    const year = this.props.month.getFullYear();
-    return month > this.currentDate.getMonth() || 
-           (month <= this.currentDate.getMonth() && year > this.currentDate.getFullYear());
-  }
-
-  addMonth(): void {
-    this.props.addMonth(1);
-  }
-
-  render(): JSX.Element {
-    let leftArrow = <View />;
-    let rightArrow = <View />;
+  override render(): React.ReactElement {
     const weekDaysNames = weekDayNames(this.props.firstDay);
-    const date = this.props.month;
-    const month = monthName(date.getMonth());
-    const year = date.getFullYear();
-
-    if (!this.props.hideArrows) {
-      leftArrow = (
-        <TouchableOpacity
-          onPress={() => this.canViewPreviouMonth() ? this.onPressLeft() : null}
-          style={this.style.arrow}
-          hitSlop={{left: 20, right: 20, top: 20, bottom: 20}}
-        >
-          {this.canViewPreviouMonth() && (this.props.renderArrow
-            ? this.props.renderArrow('left')
-            : <Text>{'<'}</Text>)}
-        </TouchableOpacity>
-      );
-      rightArrow = (
-        <TouchableOpacity
-          onPress={this.onPressRight}
-          style={this.style.arrow}
-          hitSlop={{left: 20, right: 20, top: 20, bottom: 20}}
-        >
-          {this.props.renderArrow
-            ? this.props.renderArrow('right')
-            : <Text>{'>'}</Text>}
-        </TouchableOpacity>
-      );
-    }
-
-    let indicator;
-    if (this.props.showIndicator) {
-      indicator = <ActivityIndicator />;
-    }
 
     return (
       <View>
-        <View style={[this.style.header, this.props.headerColor]}>
-          {leftArrow}
-          <View style={[{flexDirection: 'row'}, this.props.headerColor]}>
-            <Text allowFontScaling={false} style={this.style.monthText}>
-              {month} {year}
+        <View style={[this.style.header, this.props.headerStyle]}>
+          {this.props.hideArrows ? <View /> : this.renderArrow('left')}
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Text allowFontScaling={false} style={this.style.monthText} accessibilityRole="header">
+              {this.renderTitle()}
             </Text>
-            {indicator}
+            {this.props.showIndicator ? <ActivityIndicator style={{marginLeft: 8}} /> : null}
           </View>
-          {rightArrow}
+          {this.props.hideArrows ? <View /> : this.renderArrow('right')}
         </View>
-        {!this.props.hideDayNames && (
+        {this.props.hideDayNames ? null : (
           <View style={this.style.week}>
-            {this.props.weekNumbers && <Text allowFontScaling={false} style={this.style.dayHeader} />}
-            {weekDaysNames.map((day, idx) => (
+            {this.props.weekNumbers ? <Text allowFontScaling={false} style={this.style.dayHeader} /> : null}
+            {weekDaysNames.map((day, index) => (
               <Text
                 allowFontScaling={false}
-                key={`${date}.${idx}`}
+                key={`${day}-${index}`}
                 accessible={false}
                 style={this.style.dayHeader}
                 numberOfLines={1}

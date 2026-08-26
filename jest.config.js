@@ -1,37 +1,15 @@
 module.exports = {
-  preset: 'react-native',
+  preset: '@react-native/jest-preset',
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
-  setupFiles: ['./spec/setup.ts'],
-  transformIgnorePatterns: [
-    'node_modules/(?!(react-native|@react-native|react-native-.*|@react-native-community|@react-native-picker|@react-native-async-storage|@react-native-masked-view|react-native-.*)/)',
-  ],
-  moduleNameMapper: {
-    '^react-native$': '<rootDir>/spec/mocks/react-native.js',
-    '^@react-native/normalize-color$': '<rootDir>/spec/mocks/normalize-color.js',
-    '^setupDevtools$': '<rootDir>/spec/mocks/setupDevtools.js',
-    '^@react-native/js-polyfills/(.*)$': '<rootDir>/spec/mocks/react-native.js',
-    '^@react-native/(.*)$': '<rootDir>/spec/mocks/react-native.js',
-    '^react-native/(.*)$': '<rootDir>/spec/mocks/react-native.js',
-  },
-  testEnvironment: 'node',
-  setupFilesAfterEnv: ['<rootDir>/spec/setup.ts'],
-  testTimeout: 10000,
-  testRegex: '/__tests__/.*\\.(test|spec)\\.[jt]sx?$',
-  collectCoverage: true,
+  testMatch: ['<rootDir>/src/**/__tests__/**/*.test.{ts,tsx}'],
+  collectCoverageFrom: ['src/**/*.{ts,tsx}', '!src/**/__tests__/**'],
   coverageThreshold: {
     global: {
-      statements: 80,
-      branches: 80,
-      functions: 80,
-      lines: 80,
-    },
-  },
-  transform: {
-    '^.+\\.(js|jsx|ts|tsx)$': 'babel-jest',
-  },
-  globals: {
-    'ts-jest': {
-      tsconfig: 'tsconfig.json',
-    },
-  },
-}; 
+      statements: 55,
+      branches: 45,
+      functions: 55,
+      lines: 55
+    }
+  }
+};

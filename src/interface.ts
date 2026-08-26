@@ -1,12 +1,7 @@
 import XDate from 'xdate';
+import type {DateData} from './theme';
 
-interface DateData {
-  year: number;
-  month: number;
-  day: number;
-  timestamp: number;
-  dateString: string;
-}
+export type {DateData};
 
 function padNumber(n: number): string {
   if (n < 10) {
@@ -26,7 +21,7 @@ export function xdateToData(xdate: XDate): DateData {
   };
 }
 
-export function parseDate(d?: number | string | Date | XDate | DateData): XDate | undefined {
+export function parseDate(d?: number | string | Date | XDate | DateData | null): XDate | undefined {
   if (!d) {
     return undefined;
   } else if (typeof d === 'object' && 'timestamp' in d && d.timestamp) { // conventional data timestamp

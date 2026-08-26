@@ -1,43 +1,46 @@
 import {Platform} from 'react-native';
 
-export const foregroundColor: string = '#ffffff';
-export const backgroundColor: string = '#f4f4f4';
-export const separatorColor: string = '#e8e9ec';
+export const foregroundColor = '#ffffff';
+export const backgroundColor = '#f4f4f4';
+export const separatorColor = '#e8e9ec';
 
-export const processedColor: string = '#a7e0a3';
-export const processingColor: string = '#ffce5c';
-export const failedColor: string = 'rgba(246, 126, 126,1)';
+export const processedColor = '#a7e0a3';
+export const processingColor = '#ffce5c';
+export const failedColor = 'rgba(246, 126, 126, 1)';
 
-// export const textDefaultColor = '#2d4150';
-export const textDefaultColor: string = 'white';
-export const textColor: string = '#43515c';
-// export const textLinkColor = '#00adf5';
-export const textLinkColor: string = 'white';
-export const textSecondaryColor: string = '#7a92a5';
+export const textDefaultColor = '#2d4150';
+export const textColor = '#43515c';
+export const textLinkColor = '#00adf5';
+export const textSecondaryColor = '#7a92a5';
 
-export const textDayFontFamily: string = 'System';
-export const textMonthFontFamily: string = 'System';
-export const textDayHeaderFontFamily: string = 'System';
+export const textDayFontFamily = 'System';
+export const textMonthFontFamily = 'System';
+export const textDayHeaderFontFamily = 'System';
 
-export const textMonthFontWeight: string = '300';
+export const textMonthFontWeight = '300' as const;
 
-export const textDayFontSize: number = 17;
-export const textMonthFontSize: number = 17;
-export const textDayHeaderFontSize: number = 13;
+export const textDayFontSize = 16;
+export const textMonthFontSize = 16;
+export const textDayHeaderFontSize = 13;
 
-export const calendarBackground: string = foregroundColor;
-// export const textSectionTitleColor = '#b6c1cd';
-export const textSectionTitleColor: string = 'white';
-export const selectedDayBackgroundColor: string = textLinkColor;
-export const selectedDayTextColor: string = foregroundColor;
-export const todayTextColor: string = textLinkColor;
-export const dayTextColor: string = textDefaultColor;
-export const textDisabledColor: string = '#d9e1e8';
-export const dotColor: string = textLinkColor;
-export const selectedDotColor: string = foregroundColor;
-export const arrowColor: string = textLinkColor;
-export const monthTextColor: string = textDefaultColor;
-export const agendaDayTextColor: string = '#7a92a5';
-export const agendaDayNumColor: string = '#7a92a5';
-export const agendaTodayColor: string = textLinkColor;
-export const agendaKnobColor: string = Platform.OS === 'ios' ? '#f2F4f5' : '#4ac4f7'; 
+export const calendarBackground = foregroundColor;
+export const textSectionTitleColor = '#b6c1cd';
+export const selectedDayBackgroundColor = textLinkColor;
+export const selectedDayTextColor = foregroundColor;
+export const todayTextColor = textLinkColor;
+export const dayTextColor = textDefaultColor;
+export const textDisabledColor = '#d9e1e8';
+export const dotColor = textLinkColor;
+export const selectedDotColor = foregroundColor;
+export const arrowColor = textLinkColor;
+export const monthTextColor = textDefaultColor;
+
+/** Lunar day label under the solar day. */
+export const lunarTextColor = '#6d6d72';
+/** Lunar label on the first day of a lunar month, so month boundaries stand out. */
+export const lunarNewMonthTextColor = '#e53935';
+
+export const agendaDayTextColor = '#7a92a5';
+export const agendaDayNumColor = '#7a92a5';
+export const agendaTodayColor = textLinkColor;
+export const agendaKnobColor = Platform.OS === 'ios' ? '#f2f4f5' : '#4ac4f7';

@@ -1,4 +1,29 @@
 {
-  "name": "react-native-lunar-calendars-example",
-  "displayName": "React Native Lunar Calendars Example"
+  "expo": {
+    "name": "Lunar Calendars",
+    "slug": "react-native-lunar-calendars-example",
+    "version": "3.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0f766e"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.ky0nguyen.lunarcalendars.example"
+    },
+    "android": {
+      "package": "com.ky0nguyen.lunarcalendars.example",
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/android-icon-foreground.png"
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
 }

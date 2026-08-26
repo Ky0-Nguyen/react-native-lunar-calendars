@@ -1,39 +1,11 @@
-import {StyleSheet, ViewStyle, TextStyle} from 'react-native';
+import {StyleSheet} from 'react-native';
+import * as defaultStyle from '../../../style';
+import {memoizeStyle, type CalendarTheme, type Stylesheet} from '../../../theme';
 
-interface Theme {
-  textColor?: string;
-  textSectionTitleColor?: string;
-  selectedDayBackgroundColor?: string;
-  selectedDayTextColor?: string;
-  todayTextColor?: string;
-  dayTextColor?: string;
-  textDisabledColor?: string;
-  dotColor?: string;
-  monthTextColor?: string;
-  arrowColor?: string;
-  indicatorColor?: string;
-  [key: string]: any;
-}
+const STYLESHEET_ID = 'stylesheet.day.basic';
 
-interface Styles {
-  base: ViewStyle;
-  text: TextStyle;
-  alignedText: TextStyle;
-  selected: ViewStyle;
-  disabled: TextStyle;
-  today: ViewStyle;
-  todayText: TextStyle;
-  disabledText: TextStyle;
-  dot: ViewStyle;
-  visibleDot: ViewStyle;
-  selectedDot: ViewStyle;
-  selectedText: TextStyle;
-  [key: string]: ViewStyle | TextStyle;
-}
-
-const styleConstructor = (theme: Theme = {}): Styles => {
-  const appStyle = {...theme};
-
+const styleConstructor = memoizeStyle((theme: CalendarTheme) => {
+  const appStyle = {...defaultStyle, ...theme};
   return StyleSheet.create({
     base: {
       width: 32,
@@ -42,34 +14,31 @@ const styleConstructor = (theme: Theme = {}): Styles => {
       justifyContent: 'center'
     },
     text: {
-      marginTop: 4,
-      fontSize: 14,
-      fontWeight: '300',
-      color: appStyle.dayTextColor || '#2d4150',
-      backgroundColor: 'rgba(0,0,0,0)'
+      fontSize: appStyle.textDayFontSize,
+      fontFamily: appStyle.textDayFontFamily,
+      fontWeight: appStyle.textDayFontWeight ?? '300',
+      color: appStyle.dayTextColor,
+      backgroundColor: 'transparent'
     },
     alignedText: {
       marginTop: 0
     },
     selected: {
-      backgroundColor: appStyle.selectedDayBackgroundColor || '#00adf5',
+      backgroundColor: appStyle.selectedDayBackgroundColor,
       borderRadius: 16
-    },
-    disabled: {
-      opacity: 0.5
     },
     today: {
       backgroundColor: appStyle.todayBackgroundColor,
       borderRadius: 16
     },
     todayText: {
-      color: appStyle.todayTextColor || '#00adf5'
+      color: appStyle.todayTextColor
     },
     selectedText: {
-      color: appStyle.selectedDayTextColor || '#ffffff'
+      color: appStyle.selectedDayTextColor
     },
     disabledText: {
-      color: appStyle.textDisabledColor || '#d9e1e8'
+      color: appStyle.textDisabledColor
     },
     dot: {
       width: 4,
@@ -77,17 +46,17 @@ const styleConstructor = (theme: Theme = {}): Styles => {
       marginTop: 1,
       borderRadius: 2,
       opacity: 0,
-      position: 'absolute',
-      backgroundColor: appStyle.dotColor || '#00adf5'
+      backgroundColor: appStyle.dotColor
     },
     visibleDot: {
       opacity: 1,
-      backgroundColor: appStyle.dotColor || '#00adf5'
+      backgroundColor: appStyle.dotColor
     },
     selectedDot: {
-      backgroundColor: appStyle.selectedDotColor || '#ffffff'
-    }
-  });
-};
+      backgroundColor: appStyle.selectedDotColor
+    },
+    ...((theme[STYLESHEET_ID] as object) || {})
+  }) as unknown as Stylesheet;
+});
 
-export default styleConstructor; 
+export default styleConstructor;

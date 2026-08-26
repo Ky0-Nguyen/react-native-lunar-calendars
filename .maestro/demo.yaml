@@ -1,0 +1,63 @@
+# Demo walkthrough recorded for the README.
+#
+# The example app runs inside Expo Go, so the flow attaches to an already-running app
+# instead of launching it: start it first with `npm --prefix example run ios`.
+# Record with: ./scripts/record-demo.sh
+appId: host.exp.Exponent
+---
+- assertVisible: 'react-native-lunar-calendars'
+
+# Start from a known position: the tab strip may have been left scrolled.
+- swipe:
+    start: 15%, 19%
+    end: 85%, 19%
+
+# 1. Lunar dates under every solar day, with the first of a lunar month in red.
+- tapOn: 'Lunar'
+- assertVisible: 'Tháng 2 2026'
+- tapOn: '2026-02-17'
+- assertVisible: '1/1 · 1/2026'
+- tapOn: '2026-02-20'
+- tapOn: '2026-02-25'
+
+# 2. Month navigation stays responsive while lunar dates are recomputed.
+- tapOn: 'Next month'
+- tapOn: 'Next month'
+- tapOn: 'Previous month'
+- tapOn: 'Previous month'
+
+# 3. The other marking styles.
+- tapOn: 'Marked'
+- tapOn: '2026-02-19'
+- tapOn: 'Period'
+- tapOn: 'Multi-dot'
+- tapOn: '2026-02-18'
+
+# The tab strip scrolls horizontally; the last two tabs start off-screen.
+- swipe:
+    start: 85%, 19%
+    end: 15%, 19%
+
+# 4. A scrollable list of months.
+- tapOn: 'Calendar list'
+- swipe:
+    direction: UP
+    duration: 900
+- swipe:
+    direction: UP
+    duration: 900
+- swipe:
+    direction: DOWN
+    duration: 900
+
+# 5. Agenda with items per day.
+- tapOn: 'Agenda'
+- assertVisible: 'Tết — first day of the lunar year'
+- tapOn: 'Lì xì for the kids'
+
+# 6. Back to the lunar calendar to close the loop.
+- swipe:
+    start: 15%, 19%
+    end: 85%, 19%
+- tapOn: 'Lunar'
+- assertVisible: 'Tháng 2 2026'

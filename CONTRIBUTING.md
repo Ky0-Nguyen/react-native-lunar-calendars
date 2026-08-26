@@ -14,12 +14,33 @@ We use GitHub to host code, to track issues and feature requests, as well as acc
 ## We Use [Github Flow](https://guides.github.com/introduction/flow/index.html)
 Pull requests are the best way to propose changes to the codebase. We actively welcome your pull requests:
 
-1. Fork the repo and create your branch from `main`.
+1. Fork the repo and create your branch from `master`.
 2. If you've added code that should be tested, add tests.
 3. If you've changed APIs, update the documentation.
 4. Ensure the test suite passes.
 5. Make sure your code lints.
 6. Issue that pull request!
+
+## Local setup
+
+```bash
+npm install
+npm run typecheck   # tsc --noEmit
+npm run lint        # eslint
+npm test            # jest
+npm run build       # tsc -> dist/
+npm run benchmark   # lunar conversion benchmark + correctness check vs v2
+```
+
+Please run the first four before opening a pull request.
+
+To try your change in a real app, use the Expo example:
+
+```bash
+npm run build
+npm --prefix example install
+npm --prefix example run ios
+```
 
 ## Any contributions you make will be under the MIT Software License
 In short, when you submit code changes, your submissions are understood to be under the same [MIT License](http://choosealicense.com/licenses/mit/) that covers the project. Feel free to contact the maintainers if that's a concern.

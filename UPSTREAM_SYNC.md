@@ -4,7 +4,7 @@ This document outlines the process for syncing with the upstream `react-native-c
 
 ## Overview
 
-This fork maintains compatibility with the original `react-native-calendars` library while adding Vietnamese lunar calendar functionality. When the upstream repository releases updates, we need to carefully merge those changes while preserving our lunar calendar features.
+This fork maintains compatibility with the original `react-native-calendars` v1 API while adding Vietnamese lunar calendar functionality. Since v3 the source tree is TypeScript throughout, so upstream JavaScript changes are ported by hand rather than merged. When the upstream repository releases updates, we need to carefully merge those changes while preserving our lunar calendar features.
 
 ## Sync Process
 

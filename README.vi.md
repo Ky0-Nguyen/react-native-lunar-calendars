@@ -1,349 +1,302 @@
-# React Native Lunar Calendars ✨ 🗓️ 📆
+# react-native-lunar-calendars 🗓️ 🌙
 
-Module này là một fork của [react-native-calendars](https://github.com/wix/react-native-calendars) với các component lịch React Native có thể tùy chỉnh và hỗ trợ **Lịch Âm Việt Nam (Âm Lịch)**.
+Bộ component lịch cho React Native, hỗ trợ **Âm Lịch Việt Nam**.
+Đây là bản fork được duy trì từ [wix/react-native-calendars](https://github.com/wix/react-native-calendars) v1,
+giữ nguyên API gốc và bổ sung âm lịch, viết bằng TypeScript, không có native module.
 
-Package này tương thích với cả **Android** và **iOS**.
+Dùng được với **React Native thuần** và **Expo** (kể cả Expo Go — không cần prebuild).
 
-## 🔄 Về Fork Này
+> Tài liệu đầy đủ bằng tiếng Anh: [README.md](README.md) · [Changelog](CHANGELOG.md)
 
-Đây là một fork được duy trì của thư viện `react-native-calendars` gốc của Wix.com. Chúng tôi đã thêm tính năng lịch âm Việt Nam trong khi vẫn giữ nguyên tất cả tính năng gốc.
+---
 
-### Tại Sao Fork Này Tồn Tại
+## Demo
 
-- **Hỗ Trợ Lịch Âm**: Thêm tính toán và hiển thị ngày âm lịch Việt Nam
-- **Duy Trì Tích Cực**: Cập nhật và sửa lỗi thường xuyên
-- **Hỗ Trợ TypeScript**: Định nghĩa TypeScript đầy đủ
-- **Tập Trung Cộng Đồng**: Hỗ trợ cộng đồng developer Việt Nam
+<p align="center">
+  <a href="https://github.com/Ky0-Nguyen/react-native-lunar-calendars/blob/master/docs/media/demo.mp4">
+    <img src="https://raw.githubusercontent.com/Ky0-Nguyen/react-native-lunar-calendars/master/docs/media/demo.gif" width="300" alt="Âm lịch dưới mỗi ngày dương, năm kiểu marking, danh sách tháng cuộn được và agenda trong app Expo mẫu">
+  </a>
+</p>
 
-### Chiến Lược Đồng Bộ Với Upstream
+<p align="center">
+  <sub>
+    Ngày âm dưới mỗi ngày dương · Tết tô đỏ · năm kiểu marking · danh sách tháng cuộn được ·
+    agenda — <a href="https://github.com/Ky0-Nguyen/react-native-lunar-calendars/blob/master/docs/media/demo.mp4">bấm để xem video chất lượng cao</a>
+  </sub>
+</p>
 
-Chúng tôi duy trì tính tương thích với thư viện gốc trong khi thêm tính năng lịch âm. Khi upstream repository phát hành phiên bản mới:
+Quay trên iPhone với app Expo trong [`example/`](example), điều khiển hoàn toàn bằng flow
+[Maestro](https://maestro.dev) tại [`.maestro/demo.yaml`](.maestro/demo.yaml) — nên demo cũng
+chính là bài test tích hợp: flow chạy qua nghĩa là mọi màn hình ở trên đều hoạt động thật.
+Tự quay lại theo [Chạy demo](#chạy-demo).
 
-1. **Cập Nhật Tính Năng**: Chúng tôi merge các tính năng mới từ upstream
-2. **Sửa Lỗi**: Chúng tôi tích hợp các bản sửa lỗi từ upstream
-3. **Thay Đổi Breaking**: Chúng tôi đánh giá và thích ứng cẩn thận các thay đổi breaking
-4. **Tính Năng Lịch Âm**: Chúng tôi bảo tồn và cải thiện tính năng lịch âm
+## Cài đặt
 
-### Tương Thích Phiên Bản
-
-- **Phiên Bản Cơ Sở**: Fork này dựa trên `react-native-calendars` v1.x
-- **React Native**: Tương thích với React Native 0.47+ (giống upstream)
-- **Lịch Âm**: Hỗ trợ năm 1800-2199
-
-## 🌙 Tính Năng
-
-- **Hỗ Trợ Lịch Âm**: Hiển thị ngày âm lịch Việt Nam cùng với ngày dương lịch
-- **Nhiều Loại Lịch**: Basic, Period, Multi-dot, Multi-period và Custom marking styles
-- **Tính Toán Ngày Âm**: Chuyển đổi ngày âm chính xác cho năm 1800-2199
-- **Tùy Chỉnh Theme**: Hỗ trợ tùy chỉnh theme đầy đủ
-- **Hỗ Trợ TypeScript**: Viết bằng TypeScript với định nghĩa type đầy đủ
-- **Tối Ưu Hiệu Suất**: Render và cập nhật hiệu quả
-
-## Cài Đặt
-
-```
-$ npm install --save react-native-lunar-calendars
+```bash
+npm install react-native-lunar-calendars
 ```
 
-Giải pháp được triển khai bằng JavaScript nên không cần liên kết native module.
+Thư viện viết hoàn toàn bằng JavaScript, không cần link native.
 
-## 🔄 Migration từ react-native-calendars
+| Peer dependency | Phiên bản hỗ trợ |
+| --- | --- |
+| `react` | 17 → 19 |
+| `react-native` | 0.64 → 0.87 |
+| Expo SDK | 49 → 57 |
+| TypeScript | 5.0+ (đã kèm sẵn type) |
 
-Nếu bạn đang chuyển từ thư viện `react-native-calendars` gốc:
+## Bắt đầu nhanh
 
-### Migration Đơn Giản
-```javascript
-// Trước
-import { Calendar } from 'react-native-calendars';
+```tsx
+import React, {useState} from 'react';
+import {Calendar, type DateData} from 'react-native-lunar-calendars';
 
-// Sau
-import { Calendar } from 'react-native-lunar-calendars';
-```
+export default function Screen() {
+  const [selected, setSelected] = useState('2026-02-17');
 
-### Migration Nâng Cao Với Tính Năng Lịch Âm
-```javascript
-import { Calendar } from 'react-native-lunar-calendars';
-
-// Code lịch hiện tại của bạn sẽ hoạt động chính xác
-// Plus bạn có thêm tính năng lịch âm tự động
-<Calendar
-  markingType={'multi-period'}
-  // Ngày âm sẽ được hiển thị tự động
-/>
-```
-
-### Ghi Chú Tương Thích
-
-- ✅ **100% API Tương Thích**: Tất cả API methods gốc hoạt động giống hệt
-- ✅ **Cùng Props**: Tất cả props gốc được hỗ trợ
-- ✅ **Cùng Events**: Tất cả event handlers gốc hoạt động
-- ✅ **Cùng Styling**: Tất cả theme properties gốc hoạt động
-- ✅ **Plus Tính Năng Lịch Âm**: Thêm tính năng lịch âm
-
-## Sử Dụng
-
-`import {` [Calendar](#calendar), [CalendarList](#calendarlist), [Agenda](#agenda) `} from 'react-native-lunar-calendars';`
-
-## 🌙 Tính Năng Lịch Âm
-
-Thư viện này bao gồm tính năng lịch âm Việt Nam. Ngày âm được hiển thị tự động bên dưới ngày dương trong lịch. Lịch âm hỗ trợ:
-
-- **Hiển Thị Ngày Âm**: Hiển thị ngày và tháng âm bên dưới ngày dương
-- **Ngày Đặc Biệt**: Ngày mùng 1 âm lịch được highlight màu đỏ
-- **Tính Toán Chính Xác**: Dựa trên thuật toán lịch âm Việt Nam
-- **Phạm Vi Năm**: Hỗ trợ năm 1800-2199
-
-### Ví Dụ Lịch Âm
-
-```javascript
-<Calendar
-  markingType={'multi-period'}
-  // Ngày âm sẽ được hiển thị tự động
-  // Ngày mùng 1 âm lịch sẽ hiển thị màu đỏ
-  // Các ngày âm khác sẽ hiển thị màu xám
-/>
-```
-
-Tất cả tham số cho components đều tùy chọn. Theo mặc định, tháng của ngày hiện tại sẽ được hiển thị.
-
-Event handler callbacks được gọi với `calendar objects` như sau:
-
-```javascript
-{
-  day: 1,     // ngày trong tháng (1-31)
-  month: 1,   // tháng trong năm (1-12)
-  year: 2017, // năm
-  timestamp,   // UTC timestamp đại diện cho 00:00 AM của ngày này
-  dateString: '2016-05-13' // ngày được format thành string 'YYYY-MM-DD'
+  return (
+    <Calendar
+      current="2026-02-17"
+      markingType="multi-period"
+      markedDates={{[selected]: {selected: true, selectedColor: '#0d9488'}}}
+      onDayPress={(day: DateData) => setSelected(day.dateString)}
+    />
+  );
 }
 ```
 
-Các tham số yêu cầu kiểu date chấp nhận datestrings format YYYY-MM-DD, JavaScript date objects, `calendar objects` và UTC timestamps.
+Mọi callback đều nhận một `DateData`:
 
-Lịch có thể được localize bằng cách thêm custom locales vào object `LocaleConfig`:
+```ts
+{
+  day: 17,                  // ngày trong tháng, 1-31
+  month: 2,                 // tháng, 1-12
+  year: 2026,
+  timestamp: 1771286400000, // timestamp UTC lúc 00:00 của ngày đó
+  dateString: '2026-02-17'
+}
+```
 
-```javascript
+Các prop nhận ngày đều chấp nhận chuỗi `YYYY-MM-DD`, `Date`, `XDate`, timestamp UTC
+hoặc object `DateData`.
+
+## Expo
+
+Không cần config plugin, không cần prebuild, không cần `expo-dev-client`:
+
+```bash
+npx expo install react-native-lunar-calendars
+```
+
+App Expo đầy đủ nằm trong [`example/`](example) (Expo SDK 57, TypeScript):
+
+```bash
+npm run build                 # build thư viện ra dist/
+npm --prefix example install
+npm --prefix example run ios  # hoặc: run android / run web
+```
+
+Vì app mẫu dùng thư viện từ thư mục gốc của repo nên
+[`metro.config.js`](example/metro.config.js) phải trỏ `react` và `react-native` về bản của
+chính app mẫu. Nếu bạn phát triển với một bản checkout cục bộ thì làm tương tự; còn khi cài
+từ npm thì không cần gì cả.
+
+## Âm lịch
+
+Ngày âm được hiển thị ngay dưới ngày dương khi dùng marking type `multi-period`:
+
+```tsx
+<Calendar markingType="multi-period" />
+```
+
+- Ngày mùng 1 âm lịch hiển thị dạng `ngày/tháng` màu đỏ, để dễ nhận ra ranh giới tháng.
+- Các ngày còn lại chỉ hiển thị số ngày âm, màu xám.
+- Đổi màu qua theme: `lunarNewMonthTextColor` và `lunarTextColor`.
+
+### Dùng trực tiếp hàm chuyển đổi
+
+```ts
+import {
+  getLunarDate,
+  getLunarDateFromString,
+  formatLunarDay,
+  LUNAR_MIN_YEAR,
+  LUNAR_MAX_YEAR
+} from 'react-native-lunar-calendars';
+
+getLunarDate(17, 2, 2026);
+// { day: 1, month: 1, year: 2026, leap: false, jd: 2461454, isValid: true }  ← Tết
+
+getLunarDateFromString('2024-09-17');
+// { day: 15, month: 8, year: 2024, ... }  ← Tết Trung Thu
+
+formatLunarDay(getLunarDate(17, 2, 2026)); // '1/1'
+```
+
+| Export | Mô tả |
+| --- | --- |
+| `getLunarDate(day, month, year)` | Chuyển ngày dương sang âm, trả về `LunarDate`. |
+| `getLunarDateFromString('YYYY-MM-DD')` | Tương tự, nhận chuỗi ngày. |
+| `formatLunarDay(lunar)` | `'ngày/tháng'` nếu là mùng 1, ngược lại chỉ `'ngày'`. |
+| `jdn(day, month, year)` | Số ngày Julius của một ngày dương. |
+| `LUNAR_MIN_YEAR` / `LUNAR_MAX_YEAR` | `1800` / `2199` — phạm vi bảng dữ liệu. |
+| `clearLunarCache()` / `getLunarCacheStats()` | Điều khiển cache, dùng cho test và benchmark. |
+
+Ngày ngoài khoảng 1800–2199 trả về `{isValid: false}` chứ không ném lỗi, nên không bao giờ
+làm crash màn hình.
+
+Độ chính xác được kiểm tra với các mốc Tết đã công bố (2026, 2025, 2024, 2023, 2016, 2015,
+2000, 1975), Trung Thu 2024 và tháng 6 nhuận năm 2025 — xem
+[`src/lunar/__tests__`](src/lunar/__tests__/lunar.test.ts).
+
+## Các component
+
+| Component | Dùng khi |
+| --- | --- |
+| `Calendar` | Một tháng cố định. |
+| `CalendarList` | Danh sách tháng cuộn được (dọc hoặc ngang). |
+| `Agenda` | Lịch thu gọn phía trên danh sách sự kiện theo ngày. |
+
+Danh sách prop đầy đủ của từng component nằm trong [README tiếng Anh](README.md#components),
+và mọi prop đều có type + JSDoc nên IDE sẽ gợi ý trực tiếp.
+
+## Các kiểu marking
+
+`markedDates` là object ánh xạ `YYYY-MM-DD` sang marking. **Hãy tạo object mới thay vì sửa
+tại chỗ** — lịch so sánh theo tham chiếu, sửa tại chỗ sẽ không re-render.
+
+| `markingType` | Key của marking | Có âm lịch |
+| --- | --- | --- |
+| `'simple'` (mặc định) | `selected`, `selectedColor`, `marked`, `dotColor`, `disabled`, `textColor` | — |
+| `'period'` | `startingDay`, `endingDay`, `color`, `textColor` | — |
+| `'multi-dot'` | `dots: [{key, color, selectedDotColor}]` | — |
+| `'multi-period'` | `periods: [{startingDay, endingDay, color}]` | ✅ |
+| `'custom'` | `customStyles: {container, text}` | — |
+
+Không thể trộn nhiều kiểu marking trong cùng một lịch.
+
+## Theme
+
+```tsx
+<Calendar
+  theme={{
+    calendarBackground: '#ffffff',
+    selectedDayBackgroundColor: '#0d9488',
+    selectedDayTextColor: '#ffffff',
+    todayTextColor: '#0d9488',
+    dayTextColor: '#0f172a',
+    textDisabledColor: '#cbd5e1',
+    arrowColor: '#0d9488',
+    monthTextColor: '#0f172a',
+    // Dành riêng cho âm lịch:
+    lunarTextColor: '#64748b',
+    lunarNewMonthTextColor: '#e11d48'
+  }}
+/>
+```
+
+Nên giữ object theme ổn định (hằng số ở module hoặc `useMemo`). Stylesheet được cache theo
+object theme, tạo object mới mỗi lần render sẽ làm mất hiệu quả cache.
+
+## Ngôn ngữ
+
+```ts
 import {LocaleConfig} from 'react-native-lunar-calendars';
 
-LocaleConfig.locales['vi'] = {
-  monthNames: ['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Tháng 6','Tháng 7','Tháng 8','Tháng 9','Tháng 10','Tháng 11','Tháng 12'],
-  monthNamesShort: ['T1','T2','T3','T4','T5','T6','T7','T8','T9','T10','T11','T12'],
-  dayNames: ['Chủ Nhật','Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6','Thứ 7'],
-  dayNamesShort: ['CN','T2','T3','T4','T5','T6','T7']
+LocaleConfig.locales.vi = {
+  monthNames: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6',
+               'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
+  monthNamesShort: ['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10', 'T11', 'T12'],
+  dayNames: ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'],
+  dayNamesShort: ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7']
 };
 
 LocaleConfig.defaultLocale = 'vi';
 ```
 
-### Calendar
+`dayNames` luôn bắt đầu từ Chủ Nhật, không phụ thuộc `firstDay`.
 
-#### Tham Số Cơ Bản
+## Hiệu năng
 
-```javascript
-<Calendar
-  // Tháng hiển thị ban đầu. Mặc định = Date()
-  current={'2012-03-01'}
-  // Ngày tối thiểu có thể chọn, ngày trước minDate sẽ bị làm xám. Mặc định = undefined
-  minDate={'2012-05-10'}
-  // Ngày tối đa có thể chọn, ngày sau maxDate sẽ bị làm xám. Mặc định = undefined
-  maxDate={'2012-05-30'}
-  // Handler được thực thi khi nhấn ngày. Mặc định = undefined
-  onDayPress={(day) => {console.log('ngày được chọn', day)}}
-  // Handler được thực thi khi nhấn giữ ngày. Mặc định = undefined
-  onDayLongPress={(day) => {console.log('ngày được chọn', day)}}
-  // Format tháng trong tiêu đề lịch. Giá trị format: http://arshaw.com/xdate/#Formatting
-  monthFormat={'yyyy MM'}
-  // Handler được thực thi khi tháng hiển thị thay đổi trong lịch. Mặc định = undefined
-  onMonthChange={(month) => {console.log('tháng thay đổi', month)}}
-  // Ẩn mũi tên điều hướng tháng. Mặc định = false
-  hideArrows={true}
-  // Thay thế mũi tên mặc định bằng mũi tên tùy chỉnh (direction có thể là 'left' hoặc 'right')
-  renderArrow={(direction) => (<Arrow />)}
-  // Không hiển thị ngày của tháng khác trong trang tháng. Mặc định = false
-  hideExtraDays={true}
-  // Nếu hideArrows=false và hideExtraDays=false không chuyển tháng khi tap vào ngày xám
-  // từ tháng khác hiển thị trong trang lịch. Mặc định = false
-  disableMonthChange={true}
-  // Nếu firstDay=1 tuần bắt đầu từ Thứ 2. Lưu ý dayNames và dayNamesShort vẫn nên bắt đầu từ Chủ Nhật.
-  firstDay={1}
-  // Ẩn tên ngày. Mặc định = false
-  hideDayNames={true}
-  // Hiển thị số tuần bên trái. Mặc định = false
-  showWeekNumbers={true}
-  // Handler được thực thi khi nhấn icon mũi tên trái. Nhận callback có thể quay lại tháng trước
-  onPressArrowLeft={substractMonth => substractMonth()}
-  // Handler được thực thi khi nhấn icon mũi tên phải. Nhận callback có thể tiến tháng sau
-  onPressArrowRight={addMonth => addMonth()}
-/>
+Mỗi tháng phải dựng 30–42 ô ngày, và khi bật âm lịch thì mỗi ô cần một phép chuyển đổi lịch.
+v3 loại bỏ phần việc lặp lại:
+
+- **Chuyển đổi âm lịch được cache hai tầng** — cache năm âm đã giải mã và cache ngày đã chuyển
+  đổi. v2 giải mã lại nguyên một năm âm cho *từng ô*, ở *mỗi lần render*.
+- **Stylesheet được cache theo object theme**, thay vì gọi `StyleSheet.create` cho mỗi ô ngày.
+- **Component ngày được bọc `React.memo`**, nên các ô không đổi sẽ bỏ qua render.
+- **`Calendar` đưa phần tính toán chung ra ngoài vòng lặp ngày** (parse `minDate`/`maxDate`,
+  dựng tháng hiện tại).
+
+Đo trên máy Mac chip M bằng `npm run benchmark`, so với thuật toán v2:
+
+| Kịch bản | v2 | v3 | |
+| --- | --- | --- | --- |
+| Một tháng (42 ô), cache rỗng | 13.0 µs | 9.7 µs | **1.3×** |
+| Render lại cùng một tháng | 5.5 µs | 1.2 µs | **4.7×** |
+| Cuộn 24 tháng (1008 ô) | 92.5 µs | 24.6 µs | **3.8×** |
+
+Benchmark cũng kiểm tra v3 cho kết quả **giống hệt** v2 trên 2000 ngày mẫu trải khắp
+1800–2199, nên tăng tốc mà không mất độ chính xác.
+
+## Nâng cấp từ v2
+
+API component không đổi, nhưng bốn hành vi vốn bị hard-code trong v2 nay đã được sửa hoặc
+chuyển thành tuỳ chọn:
+
+| v2 | v3 |
+| --- | --- |
+| Mọi ngày đều ở trạng thái `disabled` (lỗi — không bao giờ highlight `today`) | Trạng thái ngày được tính đúng |
+| Mọi ngày quá khứ đều bị disable | Bật bằng prop `disablePastDates` |
+| Nút mũi tên "tháng trước" bị ẩn với các tháng quá khứ | Mũi tên luôn hoạt động; dùng `minDate` để giới hạn |
+| `firstDay` mặc định là Thứ Hai ở lưới nhưng Chủ Nhật ở header | Cả hai mặc định Chủ Nhật; truyền `firstDay={1}` nếu muốn Thứ Hai |
+| Màu theme mặc định là chữ trắng trên nền trắng ở vài marking type | Trả về bảng màu gốc của upstream |
+
+Ngoài ra `prop-types` đã bị bỏ (dùng type của TypeScript) và các hàm âm lịch được export ở
+package root. Xem [CHANGELOG.md](CHANGELOG.md) để biết đầy đủ.
+
+## Chạy demo
+
+Toàn bộ quá trình quay diễn ra trên máy bạn, không upload đi đâu cả.
+
+```bash
+# 1. Build thư viện và cài app mẫu
+npm install
+npm run build
+npm --prefix example install
+
+# 2. Mở app mẫu bằng Expo Go trên iOS Simulator đang chạy
+npm --prefix example run ios
+
+# 3. Maestro điều khiển app, simctl quay màn hình
+./scripts/record-demo.sh
 ```
 
-#### Đánh Dấu Ngày
+Kết quả là `docs/media/demo.mp4` và `docs/media/demo.gif`. Cần cài
+[Maestro](https://maestro.dev), `ffmpeg` và công cụ simulator của Xcode.
 
-**!Disclaimer!** Đảm bảo tham số `markedDates` là immutable. Nếu bạn thay đổi nội dung object `markedDates` nhưng reference đến nó không thay đổi, cập nhật lịch sẽ không được kích hoạt.
+Kiểm tra nhanh (không quay video):
 
-#### Tùy Chỉnh Giao Diện
-
-```javascript
-<Calendar
-  // Chỉ định style cho container element lịch. Mặc định = {}
-  style={{
-    borderWidth: 1,
-    borderColor: 'gray',
-    height: 350
-  }}
-  // Chỉ định thuộc tính theme để override specific styles cho các phần lịch. Mặc định = {}
-  theme={{
-    backgroundColor: '#ffffff',
-    calendarBackground: '#ffffff',
-    textSectionTitleColor: '#b6c1cd',
-    selectedDayBackgroundColor: '#00adf5',
-    selectedDayTextColor: '#ffffff',
-    todayTextColor: '#00adf5',
-    dayTextColor: '#2d4150',
-    textDisabledColor: '#d9e1e8',
-    dotColor: '#00adf5',
-    selectedDotColor: '#ffffff',
-    arrowColor: 'orange',
-    monthTextColor: 'blue',
-    textDayFontFamily: 'monospace',
-    textMonthFontFamily: 'monospace',
-    textDayHeaderFontFamily: 'monospace',
-    textMonthFontWeight: 'bold',
-    textDayFontSize: 16,
-    textMonthFontSize: 16,
-    textDayHeaderFontSize: 16
-  }}
-/>
+```bash
+maestro test .maestro/smoke.yaml
 ```
 
-### CalendarList
+## Đóng góp
 
-`<CalendarList />` là lịch có thể scroll semi-infinite được tạo thành từ các component `<Calendar />`. Hiện tại có thể scroll 4 năm về trước và 4 năm về tương lai. Tất cả tham số có sẵn cho `<Calendar />` cũng có sẵn cho component này. Cũng có một số tham số bổ sung có thể sử dụng:
-
-```javascript
-<CalendarList
-  // Callback được thực thi khi các tháng hiển thị thay đổi trong scroll view. Mặc định = undefined
-  onVisibleMonthsChange={(months) => {console.log('bây giờ các tháng này hiển thị', months);}}
-  // Số lượng tháng tối đa được phép scroll về quá khứ. Mặc định = 50
-  pastScrollRange={50}
-  // Số lượng tháng tối đa được phép scroll về tương lai. Mặc định = 50
-  futureScrollRange={50}
-  // Bật hoặc tắt scroll của calendar list
-  scrollEnabled={true}
-  // Bật hoặc tắt vertical scroll indicator. Mặc định = false
-  showScrollIndicator={true}
-  ...calendarParams
-/>
+```bash
+npm install
+npm run typecheck
+npm run lint
+npm test
+npm run build
 ```
 
-### Agenda
+Chạy đủ bốn lệnh trên trước khi mở pull request. Các lỗi không liên quan đến âm lịch nên
+báo trực tiếp ở [wix/react-native-calendars](https://github.com/wix/react-native-calendars).
 
-Component agenda nâng cao có thể hiển thị danh sách tương tác cho các item lịch ngày.
+## Ghi công
 
-```javascript
-<Agenda
-  // danh sách các item phải được hiển thị trong agenda. Nếu bạn muốn render item như ngày trống
-  // giá trị của date key phải là array rỗng []. Nếu không có giá trị cho date key thì
-  // được coi là ngày trong câu hỏi chưa được load
-  items={
-    {'2012-05-22': [{text: 'item 1 - any js object'}],
-     '2012-05-23': [{text: 'item 2 - any js object'}],
-     '2012-05-24': [],
-     '2012-05-25': [{text: 'item 3 - any js object'},{text: 'any js object'}],
-    }}
-  // callback được gọi khi items cho một tháng nhất định phải được load (tháng trở nên hiển thị)
-  loadItemsForMonth={(month) => {console.log('trigger items loading')}}
-  // callback được kích hoạt khi lịch được mở hoặc đóng
-  onCalendarToggled={(calendarOpened) => {console.log(calendarOpened)}}
-  // callback được gọi khi nhấn ngày
-  onDayPress={(day)=>{console.log('ngày được nhấn')}}
-  // callback được gọi khi ngày thay đổi trong khi scroll agenda list
-  onDayChange={(day)=>{console.log('ngày thay đổi')}}
-  // ngày được chọn ban đầu
-  selected={'2012-05-16'}
-  // Ngày tối thiểu có thể chọn, ngày trước minDate sẽ bị làm xám. Mặc định = undefined
-  minDate={'2012-05-10'}
-  // Ngày tối đa có thể chọn, ngày sau maxDate sẽ bị làm xám. Mặc định = undefined
-  maxDate={'2012-05-30'}
-  // Số lượng tháng tối đa được phép scroll về quá khứ. Mặc định = 50
-  pastScrollRange={50}
-  // Số lượng tháng tối đa được phép scroll về tương lai. Mặc định = 50
-  futureScrollRange={50}
-  // chỉ định cách mỗi item nên được render trong agenda
-  renderItem={(item, firstItemInDay) => {return (<View />);}}
-  // chỉ định cách mỗi ngày nên được render. day có thể undefined nếu item không phải đầu tiên trong ngày đó.
-  renderDay={(day, item) => {return (<View />);}}
-  // chỉ định cách nội dung ngày trống không có items nên được render
-  renderEmptyDate={() => {return (<View />);}}
-  // chỉ định cách agenda knob nên trông như thế nào
-  renderKnob={() => {return (<View />);}}
-  // chỉ định cái gì nên được render thay vì ActivityIndicator
-  renderEmptyData = {() => {return (<View />);}}
-  // chỉ định function so sánh item của bạn để tăng performance
-  rowHasChanged={(r1, r2) => {return r1.text !== r2.text}}
-  // Ẩn nút knob. Mặc định = false
-  hideKnob={true}
-  // Theo mặc định, ngày agenda được đánh dấu nếu chúng có ít nhất một item, nhưng bạn có thể override nếu cần
-  markedDates={% raw %}{{
-    '2012-05-16': {selected: true, marked: true},
-    '2012-05-17': {marked: true},
-    '2012-05-18': {disabled: true}
-  }}{% endraw %}
-  // agenda theme
-  theme={{
-    ...calendarTheme,
-    agendaDayTextColor: 'yellow',
-    agendaDayNumColor: 'green',
-    agendaTodayColor: 'red',
-    agendaKnobColor: 'blue'
-  }}
-  // agenda container style
-  style={{}}
-/>
-```
+- Component lịch: [wix/react-native-calendars](https://github.com/wix/react-native-calendars)
+- Fork được duy trì bởi [Tuan Nguyen](https://github.com/Ky0-Nguyen)
 
-## 🔧 Bảo Trì & Cập Nhật
-
-### Quy Trình Đồng Bộ Upstream
-
-Khi thư viện `react-native-calendars` gốc phát hành cập nhật, chúng tôi theo quy trình này:
-
-1. **Giám Sát Upstream**: Chúng tôi theo dõi releases từ repository gốc
-2. **Đánh Giá Thay Đổi**: Chúng tôi đánh giá tính năng mới và breaking changes
-3. **Merge Cập Nhật**: Chúng tôi cẩn thận merge thay đổi upstream trong khi bảo tồn tính năng lịch âm
-4. **Test Tương Thích**: Chúng tôi đảm bảo tính năng lịch âm vẫn hoạt động
-5. **Phát Hành Cập Nhật**: Chúng tôi publish phiên bản mới với cả cải tiến upstream và lịch âm
-
-### Trạng Thái Hiện Tại
-
-- **Phiên Bản Upstream**: Dựa trên `react-native-calendars` v1.x
-- **Lần Sync Cuối**: Tháng 12 2024
-- **Tính Năng Lịch Âm**: Hoạt động đầy đủ và đã test
-- **Tương Thích**: 100% tương thích với API gốc
-
-### Báo Cáo Vấn Đề
-
-Nếu bạn gặp vấn đề:
-1. Kiểm tra xem có phải vấn đề cụ thể về lịch âm không
-2. Kiểm tra xem có tồn tại trong thư viện gốc không
-3. Báo cáo vấn đề cụ thể về lịch âm ở đây
-4. Báo cáo vấn đề lịch chung cho upstream repository
-
-## Đóng Góp
-
-Pull requests được chào đón. Chạy `npm run test` và `npm run lint` trước khi push.
-
-### Hướng Dẫn Phát Triển
-
-- **Tính Năng Lịch Âm**: Tập trung vào cải tiến lịch âm
-- **Tương Thích Upstream**: Duy trì tương thích với thư viện gốc
-- **Testing**: Test cả tính năng lịch dương và âm
-- **Documentation**: Cập nhật docs cho tính năng lịch âm mới
-
-## Tác Giả
-
-- **Tuan Nguyen** - *Công việc ban đầu* - [Ky0-Nguyen](https://github.com/Ky0-Nguyen)
-
-Dự án này là fork của [react-native-calendars](https://github.com/wix/react-native-calendars) với tính năng lịch âm được thêm vào.
-
-Xem thêm danh sách [contributors] đã tham gia dự án này.
+Giấy phép MIT — xem [LICENSE](LICENSE).

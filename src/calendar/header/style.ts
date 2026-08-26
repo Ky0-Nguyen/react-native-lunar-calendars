@@ -1,23 +1,10 @@
-import {StyleSheet, Platform, ViewStyle, TextStyle} from 'react-native';
+import {StyleSheet} from 'react-native';
 import * as defaultStyle from '../../style';
+import {memoizeStyle, type CalendarTheme, type Stylesheet} from '../../theme';
 
 const STYLESHEET_ID = 'stylesheet.calendar.header';
 
-interface Theme {
-  [key: string]: any;
-}
-
-export interface HeaderStyle {
-  header: ViewStyle;
-  monthText: TextStyle;
-  arrow: ViewStyle;
-  arrowImage: ViewStyle;
-  week: ViewStyle;
-  dayHeader: TextStyle;
-  [key: string]: ViewStyle | TextStyle;
-}
-
-export default function styleConstructor(theme: Theme = {}): HeaderStyle {
+const styleConstructor = memoizeStyle((theme: CalendarTheme) => {
   const appStyle = {...defaultStyle, ...theme};
   return StyleSheet.create({
     header: {
@@ -25,30 +12,26 @@ export default function styleConstructor(theme: Theme = {}): HeaderStyle {
       justifyContent: 'space-between',
       paddingLeft: 10,
       paddingRight: 10,
-      alignItems: 'center',
+      paddingVertical: 6,
+      alignItems: 'center'
     },
     monthText: {
       fontSize: appStyle.textMonthFontSize,
       fontFamily: appStyle.textMonthFontFamily,
-      fontWeight: appStyle.textMonthFontWeight as 'normal' | 'bold' | '100' | '200' | '300' | '400' | '500' | '600' | '700' | '800' | '900',
-      color: appStyle.monthTextColor,
+      fontWeight: appStyle.textMonthFontWeight,
+      color: appStyle.monthTextColor
     },
     arrow: {
-      marginTop: 10,
+      padding: 10,
       justifyContent: 'center',
       alignItems: 'center'
     },
-    arrowImage: {
-      width: 20,
-      height: 20,
-      ...Platform.select({
-        ios: {
-          tintColor: appStyle.arrowColor
-        },
-        android: {
-          tintColor: appStyle.arrowColor
-        }
-      })
+    arrowText: {
+      fontSize: 20,
+      color: appStyle.arrowColor
+    },
+    disabledArrowText: {
+      color: appStyle.textDisabledColor
     },
     week: {
       marginTop: 7,
@@ -62,8 +45,11 @@ export default function styleConstructor(theme: Theme = {}): HeaderStyle {
       textAlign: 'center',
       fontSize: appStyle.textDayHeaderFontSize,
       fontFamily: appStyle.textDayHeaderFontFamily,
-      color: appStyle.textSectionTitleColor,
-    }
-  });
-}
- 
+      fontWeight: appStyle.textDayHeaderFontWeight,
+      color: appStyle.textSectionTitleColor
+    },
+    ...((theme[STYLESHEET_ID] as object) || {})
+  }) as unknown as Stylesheet;
+});
+
+export default styleConstructor;

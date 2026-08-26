@@ -1,510 +1,322 @@
-import React, { useState } from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 import {
   SafeAreaView,
   ScrollView,
+  StatusBar,
   StyleSheet,
   Text,
-  View,
   TouchableOpacity,
-  Alert,
+  View
 } from 'react-native';
-import { Calendar, CalendarList, Agenda, LocaleConfig } from 'react-native-lunar-calendars';
+import {
+  Agenda,
+  Calendar,
+  CalendarList,
+  LocaleConfig,
+  formatLunarDay,
+  getLunarDateFromString,
+  type CalendarTheme,
+  type DateData,
+  type MarkedDates
+} from 'react-native-lunar-calendars';
 
-// Configure Vietnamese locale
-LocaleConfig.locales['vi'] = {
+LocaleConfig.locales.vi = {
   monthNames: [
-    'Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6',
-    'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'
+    'Tháng 1',
+    'Tháng 2',
+    'Tháng 3',
+    'Tháng 4',
+    'Tháng 5',
+    'Tháng 6',
+    'Tháng 7',
+    'Tháng 8',
+    'Tháng 9',
+    'Tháng 10',
+    'Tháng 11',
+    'Tháng 12'
   ],
   monthNamesShort: ['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10', 'T11', 'T12'],
-  dayNames: ['Chủ Nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'],
-  dayNamesShort: ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'],
+  dayNames: ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'],
+  dayNamesShort: ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7']
 };
-
 LocaleConfig.defaultLocale = 'vi';
 
+const THEME: CalendarTheme = {
+  calendarBackground: '#ffffff',
+  monthTextColor: '#0f172a',
+  textMonthFontSize: 18,
+  textMonthFontWeight: '700',
+  textSectionTitleColor: '#94a3b8',
+  dayTextColor: '#0f172a',
+  todayTextColor: '#0d9488',
+  selectedDayBackgroundColor: '#0d9488',
+  selectedDayTextColor: '#ffffff',
+  textDisabledColor: '#cbd5e1',
+  arrowColor: '#0d9488',
+  dotColor: '#0d9488',
+  lunarTextColor: '#64748b',
+  lunarNewMonthTextColor: '#e11d48'
+};
+
+type TabKey = 'lunar' | 'marked' | 'period' | 'dots' | 'list' | 'agenda';
+
+const TABS: {key: TabKey; label: string}[] = [
+  {key: 'lunar', label: 'Lunar'},
+  {key: 'marked', label: 'Marked'},
+  {key: 'period', label: 'Period'},
+  {key: 'dots', label: 'Multi-dot'},
+  {key: 'list', label: 'Calendar list'},
+  {key: 'agenda', label: 'Agenda'}
+];
+
+const TET_2026 = '2026-02-17';
+
+interface AgendaItem {
+  name: string;
+  color: string;
+}
+
+const AGENDA_ITEMS: Record<string, AgendaItem[]> = {
+  '2026-02-16': [{name: 'Tất niên dinner', color: '#0d9488'}],
+  '2026-02-17': [
+    {name: 'Tết — first day of the lunar year', color: '#e11d48'},
+    {name: 'Visit grandparents', color: '#f59e0b'}
+  ],
+  '2026-02-18': [{name: 'Lì xì for the kids', color: '#6366f1'}],
+  '2026-02-19': []
+};
+
 export default function App() {
-  const [selected, setSelected] = useState('');
-  const [currentExample, setCurrentExample] = useState('basic');
+  const [tab, setTab] = useState<TabKey>('lunar');
+  const [selected, setSelected] = useState(TET_2026);
 
-  const onDayPress = (day: any) => {
-    setSelected(day.dateString);
-    Alert.alert('Selected Day', `You selected: ${day.dateString}`);
-  };
+  const onDayPress = useCallback((day: DateData) => setSelected(day.dateString), []);
 
-  const markedDates = {
-    [selected]: {
-      selected: true,
-      selectedColor: '#00adf5',
-      selectedTextColor: 'white',
-    },
-    '2024-02-15': {
-      marked: true,
-      dotColor: 'red',
-    },
-    '2024-02-20': {
-      marked: true,
-      dotColor: 'blue',
-    },
-  };
+  const markedDates = useMemo<MarkedDates>(
+    () => ({
+      [selected]: {selected: true, selectedColor: '#0d9488'},
+      '2026-02-17': {marked: true, dotColor: '#e11d48'},
+      '2026-03-05': {marked: true, dotColor: '#0d9488'}
+    }),
+    [selected]
+  );
 
-  const periodMarkedDates = {
-    '2024-02-15': {
-      startingDay: true,
-      color: 'green',
-    },
-    '2024-02-16': {
-      color: 'green',
-    },
-    '2024-02-17': {
-      endingDay: true,
-      color: 'green',
-    },
-  };
+  const periodMarkedDates = useMemo<MarkedDates>(
+    () => ({
+      '2026-02-16': {startingDay: true, color: '#0d9488', textColor: '#ffffff'},
+      '2026-02-17': {color: '#14b8a6', textColor: '#ffffff'},
+      '2026-02-18': {color: '#14b8a6', textColor: '#ffffff'},
+      '2026-02-19': {endingDay: true, color: '#0d9488', textColor: '#ffffff'}
+    }),
+    []
+  );
 
-  const multiDotMarkedDates = {
-    '2024-02-15': {
-      dots: [
-        { key: 'vacation', color: 'red', selectedDotColor: 'blue' },
-        { key: 'massage', color: 'blue', selectedDotColor: 'blue' },
-        { key: 'workout', color: 'green' },
-      ],
-      selected: true,
-      selectedColor: 'red',
-    },
-    '2024-02-16': {
-      dots: [
-        { key: 'massage', color: 'blue', selectedDotColor: 'blue' },
-        { key: 'workout', color: 'green' },
-      ],
-      disabled: true,
-    },
-  };
+  const dotMarkedDates = useMemo<MarkedDates>(
+    () => ({
+      '2026-02-17': {
+        dots: [
+          {key: 'tet', color: '#e11d48'},
+          {key: 'family', color: '#f59e0b'},
+          {key: 'food', color: '#0d9488'}
+        ]
+      },
+      '2026-02-18': {dots: [{key: 'family', color: '#f59e0b'}]},
+      [selected]: {selected: true, selectedColor: '#0d9488', dots: [{key: 'sel', color: '#ffffff'}]}
+    }),
+    [selected]
+  );
 
-  const multiPeriodMarkedDates = {
-    '2024-02-15': {
-      periods: [
-        { startingDay: false, endingDay: true, color: '#5f9ea0' },
-        { startingDay: false, endingDay: true, color: '#ffa500' },
-        { startingDay: true, endingDay: false, color: '#f0e68c' },
-      ],
-    },
-    '2024-02-16': {
-      periods: [
-        { startingDay: true, endingDay: false, color: '#ffa500' },
-        { color: 'transparent' },
-        { startingDay: false, endingDay: false, color: '#f0e68c' },
-      ],
-    },
-  };
+  const lunarMarkedDates = useMemo<MarkedDates>(
+    () => ({
+      '2026-02-17': {
+        periods: [{startingDay: true, endingDay: false, color: '#e11d48'}]
+      },
+      '2026-02-18': {periods: [{startingDay: false, endingDay: false, color: '#e11d48'}]},
+      '2026-02-19': {periods: [{startingDay: false, endingDay: true, color: '#e11d48'}]},
+      [selected]: {selected: true, selectedColor: '#0d9488'}
+    }),
+    [selected]
+  );
 
-  const agendaItems = {
-    '2024-02-15': [
-      { text: 'Meeting with client', color: 'red' },
-      { text: 'Lunch with team', color: 'blue' },
-    ],
-    '2024-02-16': [
-      { text: 'Project review', color: 'green' },
-    ],
-    '2024-02-17': [],
-    '2024-02-18': [
-      { text: 'Team building', color: 'purple' },
-      { text: 'Dinner with family', color: 'orange' },
-    ],
-  };
+  const lunar = getLunarDateFromString(selected);
 
-  const renderExample = () => {
-    switch (currentExample) {
-      case 'basic':
-        return (
-          <Calendar
-            onDayPress={onDayPress}
-            markedDates={markedDates}
-            markingType={'simple'}
-            theme={{
-              selectedDayBackgroundColor: '#00adf5',
-              selectedDayTextColor: '#ffffff',
-              todayTextColor: '#00adf5',
-              dayTextColor: '#2d4150',
-              textDisabledColor: '#d9e1e8',
-              dotColor: '#00adf5',
-              selectedDotColor: '#ffffff',
-              arrowColor: '#00adf5',
-              monthTextColor: '#00adf5',
-              indicatorColor: '#00adf5',
-              textDayFontFamily: 'monospace',
-              textMonthFontFamily: 'monospace',
-              textDayHeaderFontFamily: 'monospace',
-              textDayFontWeight: '300',
-              textMonthFontWeight: 'bold',
-              textDayHeaderFontWeight: '300',
-              textDayFontSize: 16,
-              textMonthFontSize: 16,
-              textDayHeaderFontSize: 13,
-            }}
-          />
-        );
-
+  const renderTab = () => {
+    switch (tab) {
       case 'lunar':
         return (
           <Calendar
+            testID="calendar-lunar"
+            current={TET_2026}
+            theme={THEME}
+            markingType="multi-period"
+            markedDates={lunarMarkedDates}
             onDayPress={onDayPress}
-            markedDates={markedDates}
-            markingType={'multi-period'}
-            theme={{
-              selectedDayBackgroundColor: '#00adf5',
-              selectedDayTextColor: '#ffffff',
-              todayTextColor: '#00adf5',
-              dayTextColor: '#2d4150',
-              textDisabledColor: '#d9e1e8',
-              dotColor: '#00adf5',
-              selectedDotColor: '#ffffff',
-              arrowColor: '#00adf5',
-              monthTextColor: '#00adf5',
-              indicatorColor: '#00adf5',
-              textDayFontFamily: 'monospace',
-              textMonthFontFamily: 'monospace',
-              textDayHeaderFontFamily: 'monospace',
-              textDayFontWeight: '300',
-              textMonthFontWeight: 'bold',
-              textDayHeaderFontWeight: '300',
-              textDayFontSize: 16,
-              textMonthFontSize: 16,
-              textDayHeaderFontSize: 13,
-            }}
           />
         );
-
+      case 'marked':
+        return (
+          <Calendar current={TET_2026} theme={THEME} markedDates={markedDates} onDayPress={onDayPress} />
+        );
       case 'period':
         return (
           <Calendar
-            onDayPress={onDayPress}
+            current={TET_2026}
+            theme={THEME}
+            markingType="period"
             markedDates={periodMarkedDates}
-            markingType={'period'}
-            theme={{
-              selectedDayBackgroundColor: '#00adf5',
-              selectedDayTextColor: '#ffffff',
-              todayTextColor: '#00adf5',
-              dayTextColor: '#2d4150',
-              textDisabledColor: '#d9e1e8',
-              dotColor: '#00adf5',
-              selectedDotColor: '#ffffff',
-              arrowColor: '#00adf5',
-              monthTextColor: '#00adf5',
-              indicatorColor: '#00adf5',
-              textDayFontFamily: 'monospace',
-              textMonthFontFamily: 'monospace',
-              textDayHeaderFontFamily: 'monospace',
-              textDayFontWeight: '300',
-              textMonthFontWeight: 'bold',
-              textDayHeaderFontWeight: '300',
-              textDayFontSize: 16,
-              textMonthFontSize: 16,
-              textDayHeaderFontSize: 13,
-            }}
+            onDayPress={onDayPress}
           />
         );
-
-      case 'multi-dot':
+      case 'dots':
         return (
           <Calendar
+            current={TET_2026}
+            theme={THEME}
+            markingType="multi-dot"
+            markedDates={dotMarkedDates}
             onDayPress={onDayPress}
-            markedDates={multiDotMarkedDates}
-            markingType={'multi-dot'}
-            theme={{
-              selectedDayBackgroundColor: '#00adf5',
-              selectedDayTextColor: '#ffffff',
-              todayTextColor: '#00adf5',
-              dayTextColor: '#2d4150',
-              textDisabledColor: '#d9e1e8',
-              dotColor: '#00adf5',
-              selectedDotColor: '#ffffff',
-              arrowColor: '#00adf5',
-              monthTextColor: '#00adf5',
-              indicatorColor: '#00adf5',
-              textDayFontFamily: 'monospace',
-              textMonthFontFamily: 'monospace',
-              textDayHeaderFontFamily: 'monospace',
-              textDayFontWeight: '300',
-              textMonthFontWeight: 'bold',
-              textDayHeaderFontWeight: '300',
-              textDayFontSize: 16,
-              textMonthFontSize: 16,
-              textDayHeaderFontSize: 13,
-            }}
           />
         );
-
-      case 'multi-period':
-        return (
-          <Calendar
-            onDayPress={onDayPress}
-            markedDates={multiPeriodMarkedDates}
-            markingType={'multi-period'}
-            theme={{
-              selectedDayBackgroundColor: '#00adf5',
-              selectedDayTextColor: '#ffffff',
-              todayTextColor: '#00adf5',
-              dayTextColor: '#2d4150',
-              textDisabledColor: '#d9e1e8',
-              dotColor: '#00adf5',
-              selectedDotColor: '#ffffff',
-              arrowColor: '#00adf5',
-              monthTextColor: '#00adf5',
-              indicatorColor: '#00adf5',
-              textDayFontFamily: 'monospace',
-              textMonthFontFamily: 'monospace',
-              textDayHeaderFontFamily: 'monospace',
-              textDayFontWeight: '300',
-              textMonthFontWeight: 'bold',
-              textDayHeaderFontWeight: '300',
-              textDayFontSize: 16,
-              textMonthFontSize: 16,
-              textDayHeaderFontSize: 13,
-            }}
-          />
-        );
-
-      case 'calendar-list':
+      case 'list':
         return (
           <CalendarList
+            current={TET_2026}
+            theme={THEME}
+            markingType="multi-period"
+            markedDates={lunarMarkedDates}
             onDayPress={onDayPress}
-            markedDates={markedDates}
-            markingType={'simple'}
-            theme={{
-              selectedDayBackgroundColor: '#00adf5',
-              selectedDayTextColor: '#ffffff',
-              todayTextColor: '#00adf5',
-              dayTextColor: '#2d4150',
-              textDisabledColor: '#d9e1e8',
-              dotColor: '#00adf5',
-              selectedDotColor: '#ffffff',
-              arrowColor: '#00adf5',
-              monthTextColor: '#00adf5',
-              indicatorColor: '#00adf5',
-              textDayFontFamily: 'monospace',
-              textMonthFontFamily: 'monospace',
-              textDayHeaderFontFamily: 'monospace',
-              textDayFontWeight: '300',
-              textMonthFontWeight: 'bold',
-              textDayHeaderFontWeight: '300',
-              textDayFontSize: 16,
-              textMonthFontSize: 16,
-              textDayHeaderFontSize: 13,
-            }}
-            pastScrollRange={12}
-            futureScrollRange={12}
-            scrollEnabled={true}
-            showScrollIndicator={true}
+            pastScrollRange={6}
+            futureScrollRange={6}
+            calendarHeight={380}
           />
         );
-
       case 'agenda':
         return (
-          <Agenda
-            items={agendaItems}
+          <Agenda<AgendaItem>
+            items={AGENDA_ITEMS}
+            selected={TET_2026}
+            theme={THEME}
+            pastScrollRange={2}
+            futureScrollRange={2}
             onDayPress={onDayPress}
-            onItemPress={(item) => Alert.alert('Item', `You selected: ${item.text}`)}
-            theme={{
-              selectedDayBackgroundColor: '#00adf5',
-              selectedDayTextColor: '#ffffff',
-              todayTextColor: '#00adf5',
-              dayTextColor: '#2d4150',
-              textDisabledColor: '#d9e1e8',
-              dotColor: '#00adf5',
-              selectedDotColor: '#ffffff',
-              arrowColor: '#00adf5',
-              monthTextColor: '#00adf5',
-              indicatorColor: '#00adf5',
-              agendaDayTextColor: '#00adf5',
-              agendaDayNumColor: '#00adf5',
-              agendaTodayColor: '#00adf5',
-              agendaKnobColor: '#00adf5',
-              textDayFontFamily: 'monospace',
-              textMonthFontFamily: 'monospace',
-              textDayHeaderFontFamily: 'monospace',
-              textDayFontWeight: '300',
-              textMonthFontWeight: 'bold',
-              textDayHeaderFontWeight: '300',
-              textDayFontSize: 16,
-              textMonthFontSize: 16,
-              textDayHeaderFontSize: 13,
-            }}
-            renderItem={(item) => (
-              <View style={[styles.item, { backgroundColor: item.color }]}>
-                <Text style={styles.itemText}>{item.text}</Text>
-              </View>
-            )}
-            renderDay={(day) => (
-              <View style={styles.dayHeader}>
-                <Text style={styles.dayText}>{day?.day}</Text>
+            rowHasChanged={(a, b) => a.name !== b.name}
+            renderItem={item => (
+              <View style={[styles.agendaItem, {borderLeftColor: item.color}]}>
+                <Text style={styles.agendaItemText}>{item.name}</Text>
               </View>
             )}
             renderEmptyDate={() => (
-              <View style={styles.emptyDate}>
-                <Text style={styles.emptyDateText}>No Events</Text>
+              <View style={styles.agendaEmpty}>
+                <Text style={styles.agendaEmptyText}>Nothing planned</Text>
               </View>
             )}
-            rowHasChanged={(r1, r2) => r1.text !== r2.text}
-            showClosingKnob={true}
-            hideKnob={false}
           />
         );
-
-      default:
-        return null;
     }
   };
 
-  const examples = [
-    { key: 'basic', title: 'Basic Calendar' },
-    { key: 'lunar', title: 'Lunar Calendar' },
-    { key: 'period', title: 'Period Marking' },
-    { key: 'multi-dot', title: 'Multi-Dot Marking' },
-    { key: 'multi-period', title: 'Multi-Period Marking' },
-    { key: 'calendar-list', title: 'Calendar List' },
-    { key: 'agenda', title: 'Agenda' },
-  ];
-
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.screen}>
+      <StatusBar barStyle="light-content" />
       <View style={styles.header}>
-        <Text style={styles.title}>React Native Lunar Calendars</Text>
-        <Text style={styles.subtitle}>Example App</Text>
+        <Text style={styles.title}>react-native-lunar-calendars</Text>
+        <Text style={styles.subtitle}>Vietnamese lunar calendar · Expo SDK 57</Text>
       </View>
 
-      <ScrollView horizontal style={styles.tabContainer} showsHorizontalScrollIndicator={false}>
-        {examples.map((example) => (
-          <TouchableOpacity
-            key={example.key}
-            style={[
-              styles.tab,
-              currentExample === example.key && styles.activeTab,
-            ]}
-            onPress={() => setCurrentExample(example.key)}
-          >
-            <Text
-              style={[
-                styles.tabText,
-                currentExample === example.key && styles.activeTabText,
-              ]}
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={styles.tabStrip}
+        contentContainerStyle={styles.tabStripContent}
+      >
+        {TABS.map(item => {
+          const active = item.key === tab;
+          return (
+            <TouchableOpacity
+              key={item.key}
+              testID={`tab-${item.key}`}
+              accessibilityRole="button"
+              accessibilityLabel={item.label}
+              style={[styles.tab, active && styles.tabActive]}
+              onPress={() => setTab(item.key)}
             >
-              {example.title}
-            </Text>
-          </TouchableOpacity>
-        ))}
+              <Text style={[styles.tabText, active && styles.tabTextActive]}>{item.label}</Text>
+            </TouchableOpacity>
+          );
+        })}
       </ScrollView>
 
-      <View style={styles.calendarContainer}>
-        {renderExample()}
-      </View>
+      <View style={styles.card}>{renderTab()}</View>
 
-      <View style={styles.info}>
-        <Text style={styles.infoText}>
-          Selected: {selected || 'None'}
-        </Text>
-        <Text style={styles.infoText}>
-          Tap on days to select them
-        </Text>
+      <View style={styles.footer} testID="selection-summary">
+        <View>
+          <Text style={styles.footerLabel}>Solar</Text>
+          <Text style={styles.footerValue}>{selected}</Text>
+        </View>
+        <View style={styles.footerDivider} />
+        <View>
+          <Text style={styles.footerLabel}>Lunar (Âm lịch)</Text>
+          <Text style={[styles.footerValue, lunar.day === 1 && styles.footerValueAccent]}>
+            {lunar.isValid ? `${formatLunarDay(lunar)} · ${lunar.month}/${lunar.year}` : 'out of range'}
+            {lunar.leap ? ' (nhuận)' : ''}
+          </Text>
+        </View>
       </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
-  },
-  header: {
-    padding: 20,
-    backgroundColor: '#00adf5',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: 'white',
-    marginBottom: 5,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: 'white',
-    opacity: 0.8,
-  },
-  tabContainer: {
-    backgroundColor: 'white',
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-  },
+  screen: {flex: 1, backgroundColor: '#f1f5f9'},
+  header: {paddingHorizontal: 20, paddingTop: 12, paddingBottom: 16, backgroundColor: '#0f766e'},
+  title: {fontSize: 20, fontWeight: '700', color: '#ffffff'},
+  subtitle: {marginTop: 4, fontSize: 13, color: '#ccfbf1'},
+  tabStrip: {maxHeight: 60, backgroundColor: '#ffffff'},
+  tabStripContent: {paddingHorizontal: 12, paddingVertical: 12, alignItems: 'center'},
   tab: {
-    paddingHorizontal: 15,
+    paddingHorizontal: 14,
     paddingVertical: 8,
-    marginHorizontal: 5,
-    borderRadius: 20,
-    backgroundColor: '#f0f0f0',
+    marginRight: 8,
+    borderRadius: 999,
+    backgroundColor: '#e2e8f0'
   },
-  activeTab: {
-    backgroundColor: '#00adf5',
-  },
-  tabText: {
-    fontSize: 14,
-    color: '#666',
-  },
-  activeTabText: {
-    color: 'white',
-    fontWeight: 'bold',
-  },
-  calendarContainer: {
+  tabActive: {backgroundColor: '#0d9488'},
+  tabText: {fontSize: 13, color: '#475569', fontWeight: '600'},
+  tabTextActive: {color: '#ffffff'},
+  card: {
     flex: 1,
-    backgroundColor: 'white',
-    margin: 10,
-    borderRadius: 10,
+    margin: 12,
+    borderRadius: 16,
+    backgroundColor: '#ffffff',
     overflow: 'hidden',
+    shadowColor: '#0f172a',
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    shadowOffset: {width: 0, height: 4},
+    elevation: 2
   },
-  info: {
-    padding: 20,
-    backgroundColor: 'white',
-    margin: 10,
-    borderRadius: 10,
-  },
-  infoText: {
-    fontSize: 14,
-    color: '#666',
-    textAlign: 'center',
-    marginBottom: 5,
-  },
-  item: {
-    backgroundColor: 'white',
-    flex: 1,
-    borderRadius: 5,
-    padding: 10,
-    marginRight: 10,
-    marginTop: 17,
-  },
-  itemText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  dayHeader: {
-    backgroundColor: '#f0f0f0',
-    padding: 10,
+  footer: {
+    flexDirection: 'row',
     alignItems: 'center',
+    marginHorizontal: 12,
+    marginBottom: 12,
+    padding: 16,
+    borderRadius: 16,
+    backgroundColor: '#ffffff'
   },
-  dayText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#666',
+  footerDivider: {width: 1, height: 32, backgroundColor: '#e2e8f0', marginHorizontal: 20},
+  footerLabel: {fontSize: 11, textTransform: 'uppercase', letterSpacing: 0.6, color: '#94a3b8'},
+  footerValue: {marginTop: 2, fontSize: 16, fontWeight: '700', color: '#0f172a'},
+  footerValueAccent: {color: '#e11d48'},
+  agendaItem: {
+    backgroundColor: '#ffffff',
+    borderRadius: 10,
+    borderLeftWidth: 4,
+    padding: 12,
+    marginRight: 12,
+    marginTop: 16
   },
-  emptyDate: {
-    height: 15,
-    flex: 1,
-    paddingTop: 30,
-  },
-  emptyDateText: {
-    color: '#666',
-    fontSize: 14,
-    textAlign: 'center',
-  },
+  agendaItemText: {fontSize: 15, color: '#0f172a', fontWeight: '600'},
+  agendaEmpty: {paddingTop: 24, paddingRight: 12},
+  agendaEmptyText: {color: '#94a3b8', fontSize: 14}
 });

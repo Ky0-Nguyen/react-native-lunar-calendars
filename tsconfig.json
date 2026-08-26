@@ -1,28 +1,23 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "module": "commonjs",
-    "lib": ["es6", "dom"],
-    "jsx": "react-native",
+    "target": "es2019",
+    "module": "node16",
+    "moduleResolution": "node16",
+    "lib": ["es2019", "dom"],
+    "jsx": "react-jsx",
     "strict": true,
+    "noImplicitOverride": true,
+    "noUncheckedIndexedAccess": false,
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "declaration": true,
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "moduleResolution": "node",
     "resolveJsonModule": true,
-    "allowJs": true,
-    "noEmit": false,
-    "isolatedModules": true,
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "baseUrl": ".",
-    "paths": {
-      "*": ["node_modules/*"]
-    }
+    "declaration": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "rootDir": "./src"
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "example"]
-} 
+}

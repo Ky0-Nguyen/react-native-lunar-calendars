@@ -28,7 +28,8 @@ export function isLTE(a: XDate, b: XDate): boolean {
 
 export function fromTo(a: XDate, b: XDate): XDate[] {
   const days: XDate[] = [];
-  let from = +a, to = +b;
+  const to = +b;
+  let from = +a;
   for (; from <= to; from = new XDate(from, true).addDays(1).getTime()) {
     days.push(new XDate(from, true));
   }
